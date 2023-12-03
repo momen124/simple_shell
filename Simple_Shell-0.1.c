@@ -7,12 +7,9 @@ void displayPrompt(void) {
 }
 
 char *readUserInput(void) {
-    // Implement reading user input (use dynamic memory allocation)
-    // Return the input string
-     size_t size = 0;
+    size_t size = 0;
     return _getline(&input, &size, stdin);
 }
-
 int checkForEOF(char *input) {
     // Check for EOF (Ctrl+D)
     // Return 1 if EOF, 0 otherwise
