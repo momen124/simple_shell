@@ -1,57 +1,76 @@
- #include "shell.h"
+#include "shell.h"
 
-   void displayPrompt(void) {
-       printf("$ ");
-   }
+void displayPrompt(void)
+{
+    printf("$ ");
+}
 
-   char *readUserInput(void) {
-       size_t size = 0;
-       char *input = NULL;
-       _getline(NULL, &input, &size);
-       return input;
-   }
+char *readUserInput(void)
+{
+    size_t size = 0;
+    char *input = NULL;
+    getline(&input, &size, stdin);
+    return input;
+}
 
-   int checkForEOF(char *input) {
-       if (input && input[0] == EOF) {
-           return 1;
-       }
-       return 0;
-   }
+int checkForEOF(char *input)
+{
+    if (input && input[0] == EOF)
+    {
+        return 1;
+    }
+    return 0;
+}
 
-   void executeCommand(char *input) {
-       pid_t pid = fork();
+void executeCommand(char *input)
+{
+    pid_t pid = fork();
 
-       if (pid == 0) {
-           char *argv[] = {"sh", "-c", input, NULL};
-           if (execv("/bin/sh", argv) == -1) {
-               perror("Error");
-           }
-           exit(EXIT_FAILURE);
-       } else if (pid < 0) {
-           perror("Error");
-       } else {
-           int status;
-           waitpid(pid, &status, 0);
-       }
-   }
+    if (pid == 0)
+    {
+        char *argv[4];
+        argv[0] = "sh";
+        argv[1] = "-c";
+        argv[2] = input;
+        argv[3] = NULL;
 
-   void mainLoop(void) {
-       while (1) {
-           displayPrompt();
-           char *input = readUserInput();
+        if (execv("/bin/sh", argv) == -1)
+        {
+            perror("Error");
+        }
+        exit(EXIT_FAILURE);
+    }
+    else if (pid < 0)
+    {
+        perror("Error");
+    }
+    else
+    {
+        int status;
+        waitpid(pid, &status, 0);
+    }
+}
 
-           if (checkForEOF(input)) {
-               free(input);
-               break;
-           }
+void mainLoop(void)
+{
+    while (1)
+    {
+        displayPrompt();
+        char *input = readUserInput();
 
-           executeCommand(input);
-           free(input);
-       }
-   }
+        if (checkForEOF(input))
+        {
+            free(input);
+            break;
+        }
 
-   int main() {
-       mainLoop();
-       return 0;
-   }
-   
+        executeCommand(input);
+        free(input);
+    }
+}
+
+int main()
+{
+    mainLoop();
+    return 0;
+}
