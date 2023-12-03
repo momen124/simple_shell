@@ -1,5 +1,5 @@
 #include "shell.h"
-#include <windows.h>
+
 
 void free_info(info_t *info, int full_cleanup) {
     for (int i = 0; i < info->token_count; i++) {
