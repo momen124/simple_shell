@@ -10,7 +10,7 @@ char *readUserInput(void) {
     // Implement reading user input (use dynamic memory allocation)
     // Return the input string
      size_t size = 0;
-    return getline(&input, &size, stdin);
+    return _getline(&input, &size, stdin);
 }
 
 int checkForEOF(char *input) {
@@ -46,22 +46,6 @@ void executeCommand(char *input) {
 void displayError(void) {
     // Display an error message
     perror("Error");
-}
-
-void mainLoop(void) {
-    do {
-        displayPrompt();
-        char *input = readUserInput();
-
-        if (checkForEOF(input)) {
-            free(input);
-            break;
-        }
-
-        executeCommand(input);
-        free(input);
-
-    } while (1);
 }
 
 void mainLoop(void) {
