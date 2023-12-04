@@ -53,12 +53,12 @@ void executeCommand(char *input)
 
 void mainLoop(void)
 {
+    char *input;
+
     while (1)
     {
-        char *input; // Declare at the beginning
-
         displayPrompt();
-        input = readUserInput(); // Assign later
+        input = readUserInput();
 
         if (checkForEOF(input))
         {
