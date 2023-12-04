@@ -1,68 +1,88 @@
 #include "shell.h"
 
-// Function to display the shell prompt
-void display_prompt() {
+/* Function to display the shell prompt */
+void display_prompt()
+{
     printf("$ ");
 }
 
-// Function to tokenize the user input
-char **tokenize_input(char *input) {
-    // Implement your tokenizer logic here
-    // This is just a placeholder
+/* Function to tokenize the user input */
+char **tokenize_input(char *input)
+{
+    /* Tokenize the input here. This is a placeholder logic. */
     char **tokens = malloc(sizeof(char *) * 10);
-    tokens[0] = "ls";
-    tokens[1] = "-l";
-    tokens[2] = NULL;
+    int i = 0;
+    char *token = strtok(input, " ");
+
+    while (token != NULL)
+    {
+        tokens[i++] = strdup(token);
+        token = strtok(NULL, " ");
+    }
+    tokens[i] = NULL;
     return tokens;
 }
 
-// Function to execute the command
-void execute_command(char **args) {
-    // Implement your command execution logic here
-    // This is just a placeholder
-    if (execvp(args[0], args) == -1) {
+/* Function to execute the command */
+void execute_command(char **args)
+{
+    if (execvp(args[0], args) == -1)
+    {
         perror("Command execution failed");
     }
 }
 
-int main() {
-    char *input;
+int main()
+{
+    char *input = NULL;
     size_t input_size = 0;
 
-    while (1) {
+    while (1)
+    {
         display_prompt();
 
-        // Read user input
-        if (getline(&input, &input_size, stdin) == -1) {
-            // Handle EOF (Ctrl+D)
+        /* Read user input */
+        if (getline(&input, &input_size, stdin) == -1)
+        {
             printf("\n");
-            break;
+            break; /* Handle EOF (Ctrl+D) */
         }
 
-        // Tokenize input
+        /* Tokenize input */
         char **args = tokenize_input(input);
 
-        // Check for EOF
-        if (args[0] == NULL) {
+        /* Check for EOF */
+        if (args[0] == NULL)
+        {
             free(input);
             break;
         }
 
-        // Execute command
+        /* Execute command */
         pid_t pid = fork();
-        if (pid == 0) {
-            // Child process
+        if (pid == 0)
+        {
+            /* Child process */
             execute_command(args);
-        } else if (pid > 0) {
-            // Parent process
+        }
+        else if (pid > 0)
+        {
+            /* Parent process */
             wait(NULL);
-        } else {
+        }
+        else
+        {
             perror("Fork failed");
         }
 
-        // Free memory
+        /* Free memory */
+        for (int i = 0; args[i] != NULL; i++)
+        {
+            free(args[i]);
+        }
         free(args);
     }
 
+    free(input);
     return 0;
 }
