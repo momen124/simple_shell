@@ -70,10 +70,17 @@ typedef struct info
 	char *error_message;
 } info_t;
 
-#define INFO_INIT                                                                       \
-	{                                                                                   \
-		NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 0, 0, 0 \
-	}
+#define INFO_INIT \
+	(info_t) { .tokens = NULL, .token_count = 0, .path = NULL, .status = 0 }
+
+/* Function prototypes */
+void display_prompt();
+char *read_user_input();
+void tokenize_command(info_t *info, char *input);
+int find_builtin(info_t *info);
+void find_and_execute_command(info_t *info);
+void execute_command(info_t *info);
+void free_info(info_t *info, int full_cleanup);
 
 typedef struct builtin
 {
@@ -81,13 +88,6 @@ typedef struct builtin
 	int (*func)(info_t *);
 } builtin_table;
 
-typedef struct
-{
-
-	char **tokens;
-	size_t token_count;
-	char *error_message;
-} info_t;
 /* toem_shloop.c */
 int hsh(info_t *, char **);
 int find_builtin(info_t *);
