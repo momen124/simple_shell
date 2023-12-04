@@ -1,11 +1,10 @@
- #include "shell.h"
+#include "shell.h"
 
-   #define READ_BUF_SIZE 1024
+ssize_t _getline(info_t *info, char **line, size_t *n) {
 
-   ssize_t _getline(info_t *info, char **line, size_t *n) {
-       static char buffer[READ_BUF_SIZE];
-       static size_t buffer_index = 0;
-       static ssize_t bytes_read = 0;
+  static char buffer[READ_BUF_SIZE];
+  static size_t buffer_index = 0;
+  static ssize_t bytes_read = 0;
 
        if (info->readfd == 0) {
            write(STDOUT_FILENO, "$ ", 2);

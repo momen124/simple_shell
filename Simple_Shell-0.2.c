@@ -1,86 +1,113 @@
 #include "shell.h"
 
+// Initialize info struct
+info_t info;
+
+info.tokens = NULL;
+info.token_count = 0;
+info.error_message = NULL;
 
 void free_info(info_t *info, int full_cleanup) {
+  if (info->tokens != NULL) {
     for (int i = 0; i < info->token_count; i++) {
-        free(info->tokens[i]);
+      free(info->tokens[i]);
     }
-    info->token_count = 0;
+    free(info->tokens);
+  }
 
-    if (full_cleanup && info->error_message) {
-        free(info->error_message);
-    }
+  if (full_cleanup && info->error_message != NULL) {
+    free(info->error_message);
+  }
+  // ... reset other members if needed ...
 }
 
 void tokenize_command(info_t *info, char *input) {
-    int token_index = 0;
-    char *token;
+  const char *delimiters = " "; // Modify this for your desired delimiters
+  char *token = strtok(input, delimiters);
 
-    token = strtok(input, TOKEN_DELIMITERS);
-    while (token != NULL) {
-        info->tokens[token_index] = strdup(token);
-        token_index++;
-
-        if (token_index >= MAX_TOKENS) {
-            break;
-        }
-
-        token = strtok(NULL, TOKEN_DELIMITERS);
-    }
-    info->token_count = token_index;
+  while (token != NULL) {
+    info->tokens[info->token_count++] = strdup(token);
+    token = strtok(NULL, delimiters);
+  }
 }
 
 void execute_command(info_t *info) {
-    if (info->token_count == 0) {
-        return; // No command to execute
-    }
+  if (info->token_count == 0) {
+    return; // No command to execute
+  }
 
-    pid_t pid, wpid;
-    int status;
+  // Check for built-in commands
+  if (strcmp(info->tokens[0], "exit") == 0) {
+    free_info(&info, 1);
+    exit(0);
+  } else if (strcmp(info->tokens[0], "clear") == 0) {
+    // Implement clear screen functionality
+  } else {
+    // Execute external program
+    pid_t pid = fork();
 
-    pid = fork();
     if (pid == 0) {
-        // Child process
-        if (execvp(info->tokens[0], info->tokens) == -1) {
-            perror("shell");
-        }
-        exit(EXIT_FAILURE);
-    } else if (pid < 0) {
-        // Error forking
-        perror("shell");
+      // Child process
+      execvp(info->tokens[0], info->tokens);
+      perror("Error"); // Handle execution failure
+      exit(1);
+    } else if (pid > 0) {
+      // Parent process
+      wait(NULL); // Wait for child to finish
     } else {
-        // Parent process
-        do {
-            wpid = waitpid(pid, &status, WUNTRACED);
-        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+      // Error creating child process
+      perror("Fork error");
+      free_info(&info, 1);
+      exit(1);
     }
+  }
 }
 
 void display_error(info_t *info) {
-    if (info->error_message != NULL) {
-        fprintf(stderr, "Error: %s\n", info->error_message);
-    }
+  if (info->error_message != NULL) {
+    fprintf(stderr, "Error: %s\n", info->error_message);
+  }
+  // ... other error handling logic ...
 }
 
-int main(void) {
-    info_t info = INFO_INIT;
-    char *user_input;
+void display_prompt(void) {
+  printf("$ ");
+}
 
-    while (1) {
-        display_prompt();
-        user_input = read_user_input();
+char *read_user_input(void) {
+  size_t size = 0;
+  char *input = NULL;
 
-        if (!user_input) {
-            break;
-        }
+  do {
+    input = realloc(input, size + READ_BUF_SIZE);
+    size += read(STDIN_FILENO, input + size, READ_BUF_SIZE - 1);
+    input[size] = '\0';
+  } while (!checkForEOF(input));
 
-        tokenize_command(&info, user_input);
-        execute_command(&info);
+  if (checkForEOF(input)) {
+    free(input);
+    return NULL; // Indicate EOF reached
+  }
 
-        free_info(&info, 0);
-        free(user_input);
+  return input;
+}
+
+int main() {
+  while (1) {
+    display_prompt();
+
+    char *user_input = read_user_input();
+
+    if (user_input == NULL) {
+      break; // End of file reached
     }
 
-    free_info(&info, 1);
-    return 0;
+    tokenize_command(&info, user_input);
+    execute_command(&info);
+    free_info(&info, 0); // Reset for next iteration
+
+    free(user_input);
+  }
+
+  return 0;
 }

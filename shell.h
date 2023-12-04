@@ -6,6 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <stddef.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <limits.h>
@@ -18,23 +19,24 @@
 #define BUF_FLUSH -1
 
 /* for command chaining */
-#define CMD_NORM 0
-#define CMD_OR 1
-#define CMD_AND 2
-#define CMD_CHAIN 3
+#define CMD_NORM	0
+#define CMD_OR		1
+#define CMD_AND		2
+#define CMD_CHAIN	3
 
 /* for convert_number() */
-#define CONVERT_LOWERCASE 1
-#define CONVERT_UNSIGNED 2
+#define CONVERT_LOWERCASE	1
+#define CONVERT_UNSIGNED	2
 
 /* 1 if using system getline() */
 #define USE_GETLINE 0
 #define USE_STRTOK 0
 
-#define HIST_FILE ".simple_shell_history"
-#define HIST_MAX 4096
+#define HIST_FILE	".simple_shell_history"
+#define HIST_MAX	4096
 
 extern char **environ;
+
 
 /**
  * struct liststr - singly linked list
@@ -87,16 +89,16 @@ typedef struct passinfo
 	char **environ;
 	int env_changed;
 	int status;
-	char **cmd_buf;	  /* pointer to cmd ; chain buffer, for memory management */
+
+	char **cmd_buf; /* pointer to cmd ; chain buffer, for memory mangement */
 	int cmd_buf_type; /* CMD_type ||, &&, ; */
 	int readfd;
 	int histcount;
 } info_t;
 
-#define INFO_INIT                                                                       \
-	{                                                                                   \
-		NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 0, 0, 0 \
-	}
+#define INFO_INIT \
+{NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
+	0, 0, 0}
 
 /**
  *struct builtin - contains a builtin string and related function
@@ -110,6 +112,13 @@ typedef struct builtin
 } builtin_table;
 
 
+
+typedef struct {
+ 
+  char **tokens;
+  size_t token_count;
+  char *error_message;
+} info_t;
 /* toem_shloop.c */
 int hsh(info_t *, char **);
 int find_builtin(info_t *);
@@ -183,8 +192,8 @@ int _myalias(info_t *);
 
 /*toem_getline.c */
 ssize_t get_input(info_t *);
-int _getline(info_t *info, char **line, size_t *n);
-void sigintHandler(int);
+ssize_t _getline(info_t *info, char **line, size_t *n);
+  void sigintHandler(int);
 
 /* toem_getinfo.c */
 void clear_info(info_t *);
@@ -230,5 +239,12 @@ void check_chain(info_t *, char *, size_t *, size_t, size_t);
 int replace_alias(info_t *);
 int replace_vars(info_t *);
 int replace_string(char **, char *);
+
+
+
+void free_info(info_t *info, int full_cleanup);
+void tokenize_command(info_t *info, char *input);
+void execute_command(info_t *info);
+void display_error(info_t *info);
 
 #endif
