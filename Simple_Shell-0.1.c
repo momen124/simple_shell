@@ -9,7 +9,7 @@ char *readUserInput(void)
 {
     size_t size = 0;
     char *input = NULL;
-    getline(&input, &size, stdin);
+    _getline(NULL, &input, &size);
     return input;
 }
 
@@ -55,8 +55,10 @@ void mainLoop(void)
 {
     while (1)
     {
+        char *input; // Declare at the beginning
+
         displayPrompt();
-        char *input = readUserInput();
+        input = readUserInput(); // Assign later
 
         if (checkForEOF(input))
         {
