@@ -1,46 +1,44 @@
 #include "shell.h"
 
 ssize_t _getline(info_t *info, char **line, size_t *n) {
-
+  // Existing code moved to separate block
   static char buffer[READ_BUF_SIZE];
   static size_t buffer_index = 0;
   static ssize_t bytes_read = 0;
 
-       if (info->readfd == 0) {
-           write(STDOUT_FILENO, "$ ", 2);
-       }
+  do {
+    if (buffer_index == 0) {
+      bytes_read = read(STDIN_FILENO, buffer, READ_BUF_SIZE - 1);
+      buffer[bytes_read] = '\0';
+      buffer_index = 0;
+    }
 
-       *line = NULL;
-       *n = 0;
+    *line = &buffer[buffer_index];
 
-       while (1) {
-           if (buffer_index == (size_t)bytes_read) {
-               bytes_read = read(info->readfd, buffer, READ_BUF_SIZE);
-               if (bytes_read <= 0) {
-                   if (*n > 0) {
-                       return (ssize_t)*n;
-                   } else {
-                       return -1;
-                   }
-               }
-               buffer_index = 0;
-           }
+    while (buffer_index < bytes_read && buffer[buffer_index] != '\n') {
+      buffer_index++;
+    }
 
-           char *new_line = realloc(*line, *n + 1);
-           if (new_line == NULL) {
-               free(*line);
-               return -1;
-           }
-           *line = new_line;
+    if (buffer[buffer_index] == '\n') {
+      buffer_index++;
+      bytes_read--; // don't count newline
+      break;
+    }
 
-           while (buffer_index < (size_t)bytes_read && buffer[buffer_index] != '\n') {
-               (*line)[(*n)++] = buffer[buffer_index++];
-           }
+    if (bytes_read == 0 && checkForEOF(*line)) {
+      return -1; // EOF reached
+    }
 
-           if (buffer_index < (size_t)bytes_read && buffer[buffer_index] == '\n') {
-               (*line)[(*n)++] = buffer[buffer_index++];
-               return (ssize_t)*n;
-           }
-       }
-   }
-   
+    // Reallocate line buffer if needed
+    if (*n == 0 || *n < bytes_read) {
+      *n = bytes_read + READ_BUF_SIZE;
+      *line = realloc(*line, *n);
+    }
+
+    bytes_read -= buffer_index;
+    memmove(*line, buffer, bytes_read);
+    buffer_index = 0;
+  } while (1);
+
+  return bytes_read;
+}

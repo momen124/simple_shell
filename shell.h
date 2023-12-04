@@ -44,7 +44,7 @@ typedef struct liststr
 	struct liststr *next;
 } list_t;
 
-typedef struct passinfo
+typedef struct info
 {
 	char *arg;
 	char **argv;
@@ -60,11 +60,14 @@ typedef struct passinfo
 	char **environ;
 	int env_changed;
 	int status;
-
 	char **cmd_buf;	  /* pointer to cmd ; chain buffer, for memory management */
 	int cmd_buf_type; /* CMD_type ||, &&, ; */
 	int readfd;
 	int histcount;
+
+	char **tokens;
+	size_t token_count;
+	char *error_message;
 } info_t;
 
 #define INFO_INIT                                                                       \
