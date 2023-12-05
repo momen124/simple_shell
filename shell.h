@@ -70,8 +70,16 @@ typedef struct info
 	char *error_message;
 } info_t;
 
-#define INFO_INIT \
-	(info_t) { .tokens = NULL, .token_count = 0, .path = NULL, .status = 0 }
+#define INFO_INIT info_init()
+
+info_t info_init() {
+    info_t info;
+    info.tokens = NULL;
+    info.token_count = 0;
+    info.path = NULL;
+    info.status = 0;
+    return info;
+}
 
 /* Function prototypes */
 void display_prompt();

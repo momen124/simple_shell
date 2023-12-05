@@ -1,9 +1,21 @@
 #include "shell.h"
 
+info_t info_init() {
+    info_t info;
+    info.tokens = NULL;
+    info.token_count = 0;
+    info.path = NULL;
+    info.status = 0;
+    return info;
+}
+
+#define INFO_INIT info_init()
+
 int main() {
     info_t info = INFO_INIT;
     char *user_input;
     int builtin_ret;
+    int i;
 
     while (1) {
         display_prompt();
@@ -81,7 +93,7 @@ int find_builtin(info_t *info) {
         {"alias", _myalias},
         {NULL, NULL}};
 
-    for (int i = 0; builtins[i].type; i++) {
+    for (i = 0; builtins[i].type; i++) {
         if (strcmp(info->tokens[0], builtins[i].type) == 0) {
             return builtins[i].func(info);
         }
