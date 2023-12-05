@@ -1,6 +1,6 @@
 #include "shell.h"
 
-size_t _getline(char **line, size_t *n) {
+size_t _getline(info_t *info, char **line, size_t *n) {
   /* Existing code moved to separate block */
   static char buffer[READ_BUF_SIZE];
   static size_t buffer_index = 0;
@@ -21,12 +21,12 @@ size_t _getline(char **line, size_t *n) {
 
     if (buffer[buffer_index] == '\n') {
       buffer_index++;
-      bytes_read--; // don't count newline
+      bytes_read--; /* don't count newline */
       break;
     }
 
     if (bytes_read == 0 && checkForEOF(*line)) {
-      return -1; // EOF reached
+      return (size_t)-1; /* EOF reached */
     }
 
     /* Reallocate line buffer if needed */
