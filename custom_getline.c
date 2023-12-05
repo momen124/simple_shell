@@ -1,7 +1,7 @@
 #include "shell.h"
 
-ssize_t _getline(info_t *info, char **line, size_t *n) {
-  // Existing code moved to separate block
+size_t _getline(char **line, size_t *n) {
+  /* Existing code moved to separate block */
   static char buffer[READ_BUF_SIZE];
   static size_t buffer_index = 0;
   static ssize_t bytes_read = 0;
@@ -15,7 +15,7 @@ ssize_t _getline(info_t *info, char **line, size_t *n) {
 
     *line = &buffer[buffer_index];
 
-    while (buffer_index < bytes_read && buffer[buffer_index] != '\n') {
+    while (buffer_index < (size_t)bytes_read && buffer[buffer_index] != '\n') {
       buffer_index++;
     }
 
@@ -29,8 +29,8 @@ ssize_t _getline(info_t *info, char **line, size_t *n) {
       return -1; // EOF reached
     }
 
-    // Reallocate line buffer if needed
-    if (*n == 0 || *n < bytes_read) {
+    /* Reallocate line buffer if needed */
+    if (*n == 0 || *n < (size_t)bytes_read) {
       *n = bytes_read + READ_BUF_SIZE;
       *line = realloc(*line, *n);
     }
@@ -40,5 +40,5 @@ ssize_t _getline(info_t *info, char **line, size_t *n) {
     buffer_index = 0;
   } while (1);
 
-  return bytes_read;
+  return (size_t)bytes_read;
 }
