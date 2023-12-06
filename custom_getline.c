@@ -1,6 +1,6 @@
 #include "shell.h"
 
-size_t _getline(info_t *info, char **line, size_t *n) {
+size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n) {
   /* Existing code moved to separate block */
   static char buffer[READ_BUF_SIZE];
   static size_t buffer_index = 0;

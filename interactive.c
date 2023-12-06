@@ -91,8 +91,8 @@ int find_builtin(info_t *info) {
         {"cd", _mycd},
         {"alias", _myalias},
         {NULL, NULL}};
-
-    for (int i = 0; builtins[i].type; i++) {
+    int i
+    for ( i = 0; builtins[i].type; i++) {
         if (strcmp(info->tokens[0], builtins[i].type) == 0) {
             return builtins[i].func(info);
         }

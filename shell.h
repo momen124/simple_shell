@@ -70,7 +70,6 @@ typedef struct info
 	char *error_message;
 } info_t;
 
-#define INFO_INIT info_init()
 
 info_t info_init() {
     info_t info;
@@ -80,6 +79,8 @@ info_t info_init() {
     info.status = 0;
     return info;
 }
+
+size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n);
 
 /* Function prototypes */
 void display_prompt();
