@@ -1,5 +1,6 @@
 #include "shell.h"
 
+#define INFO_INIT info_init()
 
 int main() {
     info_t info = INFO_INIT;
@@ -81,8 +82,9 @@ int find_builtin(info_t *info) {
         {"cd", _mycd},
         {"alias", _myalias},
         {NULL, NULL}};
+    int i;
 
-    for ( int i = 0; builtins[i].type; i++) {
+    for (i = 0; builtins[i].type; i++) {
         if (strcmp(info->tokens[0], builtins[i].type) == 0) {
             return builtins[i].func(info);
         }
