@@ -1,14 +1,11 @@
-#include "error_handling.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "shell.h"
 
-void report_error(const char *error_message) {
-    // Prints the error message to stderr
+/**
+ * report_error - Report an error and exit the program.
+ * @error_message: Error message to be printed.
+ */
+void report_error(const char *error_message)
+{
     fprintf(stderr, "Error: %s\n", error_message);
-
-    // Here you can add more sophisticated error handling
-    // like logging to a file, cleaning up resources, etc.
-
-    // For now, let's just exit the program with an error status
     exit(EXIT_FAILURE);
 }

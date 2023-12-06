@@ -1,6 +1,10 @@
 #include "shell.h"
 
-int main()
+/**
+ * main - Entry point for the shell program.
+ * Return: Exit status.
+ */
+int main(void)
 {
     info_t info = INFO_INIT;
     char *user_input;
@@ -38,12 +42,19 @@ int main()
     return info.status;
 }
 
-void display_prompt()
+/**
+ * display_prompt - Display the shell prompt.
+ */
+void display_prompt(void)
 {
     printf("$ ");
 }
 
-char *read_user_input()
+/**
+ * read_user_input - Read user input from stdin.
+ * Return: Pointer to the input string.
+ */
+char *read_user_input(void)
 {
     char *input = NULL;
     size_t size = 0;

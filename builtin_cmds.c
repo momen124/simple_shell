@@ -1,19 +1,22 @@
-#include "builtin_cmds.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include "shell.h"
 
+/**
+ * _myexit - Implementation of the exit command.
+ * @info: Pointer to the info_t structure.
+ * Return: Always returns 0.
+ */
 int _myexit(info_t *info)
 {
-    // Implement the exit command
     exit(0);
 }
 
+/**
+ * _myenv - Implementation of the env command.
+ * @info: Pointer to the info_t structure.
+ * Return: Always returns 0.
+ */
 int _myenv(info_t *info)
 {
-    // Implement the env command
-    // This should list all environment variables
     extern char **environ;
     for (int i = 0; environ[i] != NULL; i++)
     {
@@ -22,28 +25,37 @@ int _myenv(info_t *info)
     return 0;
 }
 
+/**
+ * _myhelp - Implementation of the help command.
+ * @info: Pointer to the info_t structure.
+ * Return: Always returns 0.
+ */
 int _myhelp(info_t *info)
 {
-    // Implement the help command
     printf("Shell Help:\n");
     printf("Available commands:\n");
     printf("exit, env, help, history, setenv, unsetenv, cd, alias\n");
     return 0;
 }
 
+/**
+ * _myhistory - Implementation of the history command.
+ * @info: Pointer to the info_t structure.
+ * Return: Always returns 0.
+ */
 int _myhistory(info_t *info)
 {
-    // Implement the history command
-    // This would normally display the history of commands executed.
-    // Placeholder for demonstration as actual history implementation will vary
     printf("Command history feature not implemented.\n");
     return 0;
 }
 
+/**
+ * _mysetenv - Implementation of the setenv command.
+ * @info: Pointer to the info_t structure.
+ * Return: Always returns 0.
+ */
 int _mysetenv(info_t *info)
 {
-    // Implement the setenv command
-    // This should set an environment variable
     if (info->token_count < 3)
     {
         fprintf(stderr, "setenv requires two arguments\n");
@@ -53,9 +65,13 @@ int _mysetenv(info_t *info)
     return 0;
 }
 
+/**
+ * _myunsetenv - Implementation of the unsetenv command.
+ * @info: Pointer to the info_t structure.
+ * Return: Always returns 0.
+ */
 int _myunsetenv(info_t *info)
 {
-    // Implement the unsetenv command
     if (info->token_count < 2)
     {
         fprintf(stderr, "unsetenv requires one argument\n");
@@ -65,12 +81,16 @@ int _myunsetenv(info_t *info)
     return 0;
 }
 
+/**
+ * _mycd - Implementation of the cd command.
+ * @info: Pointer to the info_t structure.
+ * Return: Always returns 0.
+ */
 int _mycd(info_t *info)
 {
-    // Implement the cd command
     if (info->token_count < 2)
     {
-        fprintf(stderr, "cd requires a path as argument\n");
+        fprintf(stderr, "cd requires a path as an argument\n");
         return -1;
     }
     if (chdir(info->tokens[1]) != 0)
@@ -81,10 +101,13 @@ int _mycd(info_t *info)
     return 0;
 }
 
+/**
+ * _myalias - Implementation of the alias command.
+ * @info: Pointer to the info_t structure.
+ * Return: Always returns 0.
+ */
 int _myalias(info_t *info)
 {
-    // Implement the alias command
-    // Placeholder for demonstration as actual alias implementation will vary
     printf("Alias feature not implemented.\n");
     return 0;
 }

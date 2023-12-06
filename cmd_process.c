@@ -1,7 +1,9 @@
-#include "cmd_process.h"
-#include <string.h>
-#include <stdlib.h>
-
+#include "shell.h"
+/**
+ * tokenize_command - Tokenize the input command string.
+ * @info: Pointer to the info_t structure.
+ * @input: Input command string.
+ */
 void tokenize_command(info_t *info, char *input)
 {
     char *token;
@@ -20,6 +22,11 @@ void tokenize_command(info_t *info, char *input)
     info->token_count = token_count;
 }
 
+/**
+ * find_builtin - Find if the command is a built-in command.
+ * @info: Pointer to the info_t structure.
+ * Return: 0 if built-in command found, -1 otherwise.
+ */
 int find_builtin(info_t *info)
 {
     static const builtin_table builtins[] = {
