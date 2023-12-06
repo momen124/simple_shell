@@ -1,45 +1,67 @@
 #include "shell.h"
 
-size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n) {
-  /* Existing code moved to separate block */
-  static char buffer[READ_BUF_SIZE];
-  static size_t buffer_index = 0;
-  static ssize_t bytes_read = 0;
+ssize_t _getline(char **line, size_t *n)
+{
+  if (line == NULL || n == NULL)
+  {
+    errno = EINVAL;
+    return -1;
+  }
 
-  do {
-    if (buffer_index == 0) {
-      bytes_read = read(STDIN_FILENO, buffer, READ_BUF_SIZE - 1);
-      buffer[bytes_read] = '\0';
-      buffer_index = 0;
+  if (*line == NULL || *n == 0)
+  {
+    *n = READ_BUF_SIZE;
+    *line = malloc(*n);
+    if (*line == NULL)
+    {
+      return -1;
+    }
+  }
+
+  size_t pos = 0;
+  ssize_t bytesRead = 0;
+  while (1)
+  {
+    bytesRead = read(STDIN_FILENO, *line + pos, *n - pos - 1);
+    if (bytesRead == -1)
+    {
+      if (errno == EINTR)
+      {
+        continue;
+      }
+      free(*line);
+      return -1;
     }
 
-    *line = &buffer[buffer_index];
-
-    while (buffer_index < (size_t)bytes_read && buffer[buffer_index] != '\n') {
-      buffer_index++;
-    }
-
-    if (buffer[buffer_index] == '\n') {
-      buffer_index++;
-      bytes_read--; /* don't count newline */
+    if (bytesRead == 0)
+    { // EOF reached
+      if (pos == 0)
+      {
+        free(*line);
+        return -1;
+      }
       break;
     }
 
-    if (bytes_read == 0 && checkForEOF(*line)) {
-      return (size_t)-1; /* EOF reached */
+    pos += bytesRead;
+    if (pos > 0 && (*line)[pos - 1] == '\n')
+    {
+      break;
     }
 
-    /* Reallocate line buffer if needed */
-    if (*n == 0 || *n < (size_t)bytes_read) {
-      *n = bytes_read + READ_BUF_SIZE;
-      *line = realloc(*line, *n);
+    if (pos + 1 == *n)
+    {
+      *n *= 2;
+      char *new_line = realloc(*line, *n);
+      if (new_line == NULL)
+      {
+        free(*line);
+        return -1;
+      }
+      *line = new_line;
     }
+  }
 
-    bytes_read -= buffer_index;
-    memmove(*line, buffer, bytes_read);
-    buffer_index = 0;
-  } while (1);
-
-  return (size_t)bytes_read;
+  (*line)[pos] = '\0';
+  return (ssize_t)pos;
 }
-
