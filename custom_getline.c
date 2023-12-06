@@ -1,6 +1,6 @@
 #include "shell.h"
 
-size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n);
+ssize_t _getline(char **line, size_t *n) 
 {
   if (line == NULL || n == NULL)
   {

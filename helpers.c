@@ -10,7 +10,7 @@ void free_info(info_t *info, int full)
     /* Free the tokens */
     if (info->tokens != NULL)
     {
-        for (size_t i = 0; i < info->token_count; i++)
+    for (size_t i = 0; i < info->token_count; i++) 
         {
             free(info->tokens[i]);
         }
@@ -44,11 +44,10 @@ char *strdup(const char *s)
         return NULL;
     }
     size_t size = strlen(s) + 1;
-    char *new_str = malloc(size);
-    if (new_str == NULL)
-    {
-        return NULL;
-    }
-    memcpy(new_str, s, size);
-    return new_str;
+char *new_str = malloc(size);
+if (!new_str) {
+  return NULL;
+}
+memcpy(new_str, s, size);
+return new_str;
 }
