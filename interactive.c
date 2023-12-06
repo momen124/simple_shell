@@ -15,7 +15,6 @@ int main() {
     info_t info = INFO_INIT;
     char *user_input;
     int builtin_ret;
-    int i; // Declare i here
 
     while (1) {
         display_prompt();
@@ -93,7 +92,7 @@ int find_builtin(info_t *info) {
         {"alias", _myalias},
         {NULL, NULL}};
 
-    for (i = 0; builtins[i].type; i++) {
+    for (int i = 0; builtins[i].type; i++) {
         if (strcmp(info->tokens[0], builtins[i].type) == 0) {
             return builtins[i].func(info);
         }
