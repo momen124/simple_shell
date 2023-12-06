@@ -81,6 +81,8 @@ info_t info_init() {
     return info;
 }
 
+
+info_t info_init(void);
 /* Function prototypes */
 void display_prompt();
 char *read_user_input();

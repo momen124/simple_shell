@@ -15,7 +15,7 @@ int main() {
     info_t info = INFO_INIT;
     char *user_input;
     int builtin_ret;
-    int i;
+    int i; // Declare i here
 
     while (1) {
         display_prompt();
@@ -123,7 +123,7 @@ void execute_command(info_t *info) {
     } else if (pid < 0) {
         perror("fork");
     } else {
-        /* Parent process*/
+        /* Parent process */
         waitpid(pid, &(info->status), 0);
     }
 }
