@@ -1,15 +1,5 @@
 #include "shell.h"
 
-info_t info_init() {
-    info_t info;
-    info.tokens = NULL;
-    info.token_count = 0;
-    info.path = NULL;
-    info.status = 0;
-    return info;
-}
-
-#define INFO_INIT info_init()
 
 int main() {
     info_t info = INFO_INIT;
