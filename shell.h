@@ -68,7 +68,7 @@ typedef struct info
 	char **tokens;
 	size_t token_count;
 	char *error_message;
-}
+} info_t;
 
 
 info_t info_init() {
