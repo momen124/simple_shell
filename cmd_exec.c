@@ -57,6 +57,8 @@ void execute_command(info_t *info)
  */
 char *find_path(info_t *info, const char *path, const char *command) 
 {
+    (void)info;
+    (void)path;
     char *full_path = malloc(strlen(command) + 1);
     strcpy(full_path, command);
     return full_path;
