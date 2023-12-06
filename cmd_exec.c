@@ -55,9 +55,8 @@ void execute_command(info_t *info)
  * @command: The command to find.
  * Return: The full path of the command.
  */
-char *find_path(info_t *info, const char *path, const char *command)
+char *find_path(info_t *info, const char *path, const char *command) 
 {
-    // Placeholder implementation:
     char *full_path = malloc(strlen(command) + 1);
     strcpy(full_path, command);
     return full_path;

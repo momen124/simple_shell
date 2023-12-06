@@ -184,14 +184,14 @@ void report_error(const char *error_message);
 void free_info(info_t *info, int full);
 char *strdup(const char *s); 
 
-// /* toem_builtin.c */
-// int _myexit(info_t *);
-// int _mycd(info_t *);
-// int _myhelp(info_t *);
+/* toem_builtin.c */
+int _myexit(info_t *);
+int _mycd(info_t *);
+int _myhelp(info_t *);
 
-// /* toem_builtin1.c */
-// int _myhistory(info_t *);
-// int _myalias(info_t *);
+/* toem_builtin1.c */
+int _myhistory(info_t *);
+int _myalias(info_t *);
 
 /*toem_getline.c */
 size_t get_input(info_t *);

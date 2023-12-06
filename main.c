@@ -6,7 +6,7 @@
  */
 int main(void)
 {
-    info_t info = INFO_INIT;
+    info_t info = {0};
     char *user_input;
     int builtin_ret;
 

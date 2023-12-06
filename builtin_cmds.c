@@ -7,6 +7,7 @@
  */
 int _myexit(info_t *info)
 {
+    (void)info; // Unused parameter
     exit(0);
 }
 
@@ -17,8 +18,9 @@ int _myexit(info_t *info)
  */
 int _myenv(info_t *info)
 {
+    int i;
     extern char **environ;
-    for (int i = 0; environ[i] != NULL; i++)
+    for (i = 0; environ[i] != NULL; i++)
     {
         printf("%s\n", environ[i]);
     }
