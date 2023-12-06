@@ -159,14 +159,39 @@ int print_d(int, int);
 char *convert_number(long int, int, int);
 void remove_comments(char *);
 
-/* toem_builtin.c */
-int _myexit(info_t *);
-int _mycd(info_t *);
-int _myhelp(info_t *);
 
-/* toem_builtin1.c */
-int _myhistory(info_t *);
-int _myalias(info_t *);
+/* Built-in commands */
+int _myexit(info_t *info);
+int _myenv(info_t *info);
+int _myhelp(info_t *info);
+int _myhistory(info_t *info); 
+int _mysetenv(info_t *info);
+int _myunsetenv(info_t *info);
+int _mycd(info_t *info);
+int _myalias(info_t *info);
+
+/* Command execution */
+void find_and_execute_command(info_t *info); 
+void execute_command(info_t *info);
+
+/* Command processing */
+void tokenize_command(info_t *info, char *input); 
+int find_builtin(info_t *info); 
+
+/* Error handling*/
+void report_error(const char *error_message); 
+/* Helpers*/
+void free_info(info_t *info, int full);
+char *strdup(const char *s); 
+
+// /* toem_builtin.c */
+// int _myexit(info_t *);
+// int _mycd(info_t *);
+// int _myhelp(info_t *);
+
+// /* toem_builtin1.c */
+// int _myhistory(info_t *);
+// int _myalias(info_t *);
 
 /*toem_getline.c */
 size_t get_input(info_t *);

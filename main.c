@@ -1,9 +1,4 @@
 #include "shell.h"
-#include "cmd_process.h"
-#include "builtin_cmds.h"
-#include "cmd_exec.h"
-#include "error_handling.h"
-#include "helpers.h"
 
 int main()
 {
