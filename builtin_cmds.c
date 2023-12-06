@@ -1,5 +1,5 @@
 #include "shell.h"
-
+#define INFO_INIT info_init()
 /**
  * _myexit - Implementation of the exit command.
  * @info: Pointer to the info_t structure.
@@ -18,6 +18,7 @@ int _myexit(info_t *info)
  */
 int _myenv(info_t *info)
 {
+    (void)info;
     int i;
     extern char **environ;
     for (i = 0; environ[i] != NULL; i++)
@@ -34,6 +35,7 @@ int _myenv(info_t *info)
  */
 int _myhelp(info_t *info)
 {
+    (void)info;
     printf("Shell Help:\n");
     printf("Available commands:\n");
     printf("exit, env, help, history, setenv, unsetenv, cd, alias\n");
@@ -47,6 +49,7 @@ int _myhelp(info_t *info)
  */
 int _myhistory(info_t *info)
 {
+    (void)info;
     printf("Command history feature not implemented.\n");
     return 0;
 }
@@ -110,6 +113,7 @@ int _mycd(info_t *info)
  */
 int _myalias(info_t *info)
 {
+    (void)info;
     printf("Alias feature not implemented.\n");
     return 0;
 }
