@@ -7,7 +7,7 @@
  */
 int _myexit(info_t *info)
 {
-    (void)info; // Unused parameter
+    (void)info; 
     exit(0);
 }
 

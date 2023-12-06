@@ -1,6 +1,6 @@
 #include "shell.h"
 
-ssize_t _getline(char **line, size_t *n)
+size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n);
 {
   if (line == NULL || n == NULL)
   {
@@ -19,7 +19,7 @@ ssize_t _getline(char **line, size_t *n)
   }
 
   size_t pos = 0;
-  ssize_t bytesRead = 0;
+  size_t bytesRead = 0;
   while (1)
   {
     bytesRead = read(STDIN_FILENO, *line + pos, *n - pos - 1);
@@ -34,7 +34,7 @@ ssize_t _getline(char **line, size_t *n)
     }
 
     if (bytesRead == 0)
-    { // EOF reached
+    { 
       if (pos == 0)
       {
         free(*line);
@@ -63,5 +63,5 @@ ssize_t _getline(char **line, size_t *n)
   }
 
   (*line)[pos] = '\0';
-  return (ssize_t)pos;
+  return (ssize_t)pos;
 }

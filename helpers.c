@@ -28,7 +28,7 @@ void free_info(info_t *info, int full)
     /* If full cleanup is requested, free additional resources */
     if (full)
     {
-        /* Add any additional cleanup steps here */
+        /* Add any additional cleanup steps here*/
     }
 }
 
