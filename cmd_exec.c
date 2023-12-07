@@ -58,8 +58,8 @@ void execute_command(info_t *info)
 char *find_path(info_t *info, char *path, char *command)
 {
     char *token;
-    (void)info;
     char *full_path;
+    (void)info;
     struct stat st;
 
     token = strtok(path, ":");
