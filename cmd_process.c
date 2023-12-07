@@ -7,6 +7,7 @@
  */
 void tokenize_command(info_t *info, char *input)
 {
+    size_t i; 
     char *token;
     char **tokens = malloc(READ_BUF_SIZE * sizeof(char *));
     size_t token_count = 0;
@@ -17,8 +18,6 @@ void tokenize_command(info_t *info, char *input)
         exit(EXIT_FAILURE);
     }
 
-    size_t i; // Move the declaration to the beginning
-
     token = strtok(input, " \t\r\n\a");
     while (token != NULL)
     {
@@ -26,7 +25,6 @@ void tokenize_command(info_t *info, char *input)
         if (!tokens[token_count])
         {
             perror("strdup");
-
             for (i = 0; i < token_count; i++)
             {
                 free(tokens[i]);
