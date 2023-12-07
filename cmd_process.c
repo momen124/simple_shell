@@ -23,7 +23,7 @@ void tokenize_command(info_t *info, char *input)
         if (!tokens[token_count])
         {
             perror("strdup");
-            // Free allocated memory before exiting
+            
             for (size_t i = 0; i < token_count; i++)
             {
                 free(tokens[i]);

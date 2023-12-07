@@ -35,7 +35,6 @@
 #define HIST_FILE ".simple_shell_history"
 #define HIST_MAX 4096
 
-#define INFO_INIT info_init()
 extern void info_init(void);
 
 
@@ -75,14 +74,7 @@ typedef struct info
 } info_t;
 
 
-info_t info_init() {
-    info_t info;
-    info.tokens = NULL;
-    info.token_count = 0;
-    info.path = NULL;
-    info.status = 0;
-    return info;
-}
+
 
 size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n);
 
