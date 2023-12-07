@@ -93,7 +93,7 @@ void preprocess_command(info_t *info, char *input) {
   /* Detect and remove comments */
   char *comment_start = strchr(input, '#');
   if (comment_start != NULL) {
-    *comment_start = '\0'; // Null terminate to truncate the string at the comment
+    *comment_start = '\0'; 
   }
 
   /* Replace variables */
@@ -121,4 +121,19 @@ void preprocess_command(info_t *info, char *input) {
         /* Use a fixed-size array or dynamically allocate memory */
         char var_name[j - i - 1];
         strncpy(var_name, input + i + 1, j - i - 1);
-        
+   var_name[j - i - 1] = '\0';
+
+        /* Lookup the environment variable */
+        char *var_value = getenv(var_name);
+        if (var_value != NULL) {
+          /* Replace the variable with its value */
+          int replace_len = strlen(var_value);
+          memmove(input + i, var_value, replace_len);
+          memset(input + i + replace_len, '\0', strlen(input) - i - replace_len);
+          i += replace_len - 1;
+        }
+      }
+    }
+    i++;
+  }
+}
