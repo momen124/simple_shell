@@ -10,16 +10,52 @@ void tokenize_command(info_t *info, char *input)
     char **tokens = malloc(READ_BUF_SIZE * sizeof(char *));
     size_t token_count = 0;
 
+    if (!tokens)
+    {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+
     token = strtok(input, " \t\r\n\a");
     while (token != NULL)
     {
-        tokens[token_count++] = strdup(token);
+        tokens[token_count] = strdup(token);
+        if (!tokens[token_count])
+        {
+            perror("strdup");
+            // Free allocated memory before exiting
+            for (size_t i = 0; i < token_count; i++)
+            {
+                free(tokens[i]);
+            }
+            free(tokens);
+            exit(EXIT_FAILURE);
+        }
+        token_count++;
         token = strtok(NULL, " \t\r\n\a");
     }
     tokens[token_count] = NULL;
 
+    // Free existing tokens if any
+    free_info_tokens(info);
+
     info->tokens = tokens;
     info->token_count = token_count;
+}
+
+/**
+ * free_info_tokens - Free memory allocated for tokens in info.
+ * @info: Pointer to the info_t structure.
+ */
+void free_info_tokens(info_t *info)
+{
+    for (size_t i = 0; i < info->token_count; i++)
+    {
+        free(info->tokens[i]);
+    }
+    free(info->tokens);
+    info->tokens = NULL;
+    info->token_count = 0;
 }
 
 /**

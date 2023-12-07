@@ -1,5 +1,14 @@
 #include "shell.h"
 
+
+info_t info_init() {
+    info_t info;
+    info.tokens = NULL;
+    info.token_count = 0;
+    info.path = NULL;
+    info.status = 0;
+    return info;
+}
 void free_info(info_t *info, int full) {
 size_t i;
 for (i = 0; i < info->token_count; i++) {

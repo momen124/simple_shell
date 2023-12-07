@@ -36,6 +36,9 @@
 #define HIST_MAX 4096
 
 #define INFO_INIT info_init()
+extern void info_init(void);
+
+
 extern char **environ;
 
 typedef struct liststr

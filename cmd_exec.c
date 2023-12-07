@@ -55,14 +55,31 @@ void execute_command(info_t *info)
  * @command: The command to find.
  * Return: The full path of the command.
  */
-char *find_path(info_t *info __attribute__((unused)), char *path __attribute__((unused)), char *command)
+char *find_path(info_t *info, char *path, char *command)
 {
-    char *full_path;
-    full_path = malloc(strlen(command) + 1);
-    if (!full_path)
+    char *token, *full_path;
+    struct stat st;
+
+    token = strtok(path, ":");
+    while (token != NULL)
     {
-        return NULL;
+        full_path = malloc(strlen(token) + strlen(command) + 2);
+        if (!full_path)
+        {
+            return NULL; 
+        }
+        
+        sprintf(full_path, "%s/%s", token, command);
+
+        if (stat(full_path, &st) == 0)
+        {
+            return full_path; 
+        }
+
+        free(full_path);
+        token = strtok(NULL, ":");
     }
-    strcpy(full_path, command);
-    return full_path;
+
+    fprintf(stderr, "Command not found in PATH: %s\n", command);
+    return NULL;
 }

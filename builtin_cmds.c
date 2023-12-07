@@ -1,5 +1,4 @@
 #include "shell.h"
-#define INFO_INIT info_init()
 
 /**
  * _myexit - Implementation of the exit command.
@@ -54,8 +53,14 @@ int _myhelp(info_t *info)
  */
 int _myhistory(info_t *info)
 {
+    int i;
     (void)info;
-    printf("Command history feature not implemented.\n");
+
+    for (i = 0; i < 10 && info->cmd_buf[i] != NULL; i++)
+    {
+        printf("%s\n", info->cmd_buf[i]);
+    }
+
     return 0;
 }
 
