@@ -40,12 +40,7 @@ extern void info_init(void);
 
 extern char **environ;
 
-typedef struct liststr
-{
-	int num;
-	char *str;
-	struct liststr *next;
-} list_t;
+
 
 typedef struct info
 {
