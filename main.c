@@ -1,4 +1,6 @@
-**
+#include "shell.h"
+
+/**
  * main - Entry point for the shell program.
  * Return: Exit status.
  */
