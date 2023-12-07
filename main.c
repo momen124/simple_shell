@@ -1,14 +1,13 @@
-#include "shell.h"
-
-/**
+**
  * main - Entry point for the shell program.
  * Return: Exit status.
  */
-int main(void)
+int main(int argc, char *argv[])
 {
     if (argc > 1) {
-    freopen(argv[1], "r", stdin);
-}
+        freopen(argv[1], "r", stdin);
+    }
+
     info_t info = {0};
     char *user_input;
     int builtin_ret;

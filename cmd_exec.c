@@ -67,7 +67,7 @@ char *find_path(info_t *info, char *path, char *command)
     return NULL;
   }
 
-  char copied_path[strlen(path) + 1];
+  char copied_path[PATH_MAX + 1];
   strcpy(copied_path, path);
 
   token = strtok(copied_path, ":");
