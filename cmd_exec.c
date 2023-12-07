@@ -67,6 +67,7 @@ char *find_path(info_t *info, char *path, char *command)
     return NULL;
   }
 
+  /* Move the declaration to the beginning of the function */
   char copied_path[PATH_MAX + 1];
   strcpy(copied_path, path);
 

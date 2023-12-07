@@ -88,42 +88,45 @@ char *find_path(info_t *info, char *path, char *command) {
 }
 
 void preprocess_command(info_t *info, char *input) {
- 
-  char *comment_start = strchr(input, '#');
-  if (comment_start != NULL) {
-    *comment_start = '\0';
-  }
+  /* Use standard C comments */
+  /* Declare isalnum function */
+  int isalnum(int);
 
+  /* Move declarations to the beginning of the function */
   int i = 0;
+  char buffer[10];
+  int replace_len = 0;
+  int j = 0;
+
   while (input[i] != '\0') {
-    if (input[i] == '$') 
-    {
+    if (input[i] == '$') {
+      /* Check for special variables like $? and $$ */
       if (input[i + 1] == '?' || input[i + 1] == '$') {
-        char buffer[10];
         if (input[i + 1] == '?') {
           sprintf(buffer, "%d", info->status);
         } else {
           sprintf(buffer, "%d", getpid());
         }
-        int replace_len = strlen(buffer);
+        replace_len = strlen(buffer);
         memmove(input + i, buffer, replace_len);
         memset(input + i + replace_len, '\0', strlen(input) - i - replace_len);
         i += replace_len - 1;
       } else {
-
-        int j= i + 2;
+        /* Handle environment variables */
+        j = i + 2;
         while (isalnum(input[j]) || input[j] == '_') {
           j++;
         }
-
-        char var_name[j - i - 1];
+        /* Use a fixed-size array */
+        char var_name[MAX_VAR_NAME_LENGTH];
         strncpy(var_name, input + i + 1, j - i - 1);
         var_name[j - i - 1] = '\0';
 
+        /* Lookup the environment variable */
         char *var_value = getenv(var_name);
         if (var_value != NULL) {
-
-          int replace_len = strlen(var_value);
+          /* Replace the variable with its value */
+          replace_len = strlen(var_value);
           memmove(input + i, var_value, replace_len);
           memset(input + i + replace_len, '\0', strlen(input) - i - replace_len);
           i += replace_len - 1;

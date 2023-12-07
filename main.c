@@ -6,22 +6,21 @@
  */
 int main(int argc, char *argv[])
 {
-  info_t info = {0}; 
-  if (argc > 1) {
-    freopen(argv[1], "r", stdin);
-  }
-
-  char *user_input;
-  int builtin_ret;
-
-  while (1) {
-    display_prompt();
-    user_input = read_user_input();
-
-    if (user_input == NULL) {
-      break; /* End of file or an error */
+    info_t info = {0}; 
+    if (argc > 1) {
+        freopen(argv[1], "r", stdin);
     }
 
+    char *user_input;
+    int builtin_ret;
+
+    while (1) {
+        display_prompt();
+        user_input = read_user_input();
+
+        if (user_input == NULL) {
+            break; /* End of file or an error */
+        }
 
         tokenize_command(&info, user_input);
         if (info.token_count > 0)
@@ -74,6 +73,6 @@ char *read_user_input(void)
     {
         input[read_bytes - 1] = '\0';
     }
-free_info(&info, 1); /* Clean up before exiting */
+
     return input;
 }
