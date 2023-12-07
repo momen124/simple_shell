@@ -1,3 +1,4 @@
+#include "shell.h"
 ssize_t _getline(char **line, size_t *n, info_t *info __attribute__((unused))) {
 
     size_t pos = 0;
