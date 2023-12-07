@@ -4,25 +4,25 @@
  * main - Entry point for the shell program.
  * Return: Exit status.
  */
-int main(int argc, char *argv[])
+nt main(int argc, char *argv[])
 {
-    if (argc > 1) {
-        freopen(argv[1], "r", stdin);
+  info_t info = {0}; // Move the declaration here
+
+  if (argc > 1) {
+    freopen(argv[1], "r", stdin);
+  }
+
+  char *user_input;
+  int builtin_ret;
+
+  while (1) {
+    display_prompt();
+    user_input = read_user_input();
+
+    if (user_input == NULL) {
+      break; /* End of file or an error */
     }
 
-    info_t info = {0};
-    char *user_input;
-    int builtin_ret;
-
-    while (1)
-    {
-        display_prompt();
-        user_input = read_user_input();
-
-        if (user_input == NULL)
-        {
-            break; /* End of file or an error */
-        }
 
         tokenize_command(&info, user_input);
         if (info.token_count > 0)
@@ -75,6 +75,6 @@ char *read_user_input(void)
     {
         input[read_bytes - 1] = '\0';
     }
-
+free_info(&info, 1); /* Clean up before exiting */
     return input;
 }

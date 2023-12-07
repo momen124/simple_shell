@@ -58,7 +58,7 @@ char *find_path(info_t *info, char *path, char *command) {
     return NULL;
   }
 
-  /* Use a fixed-size array or dynamically allocate memory */
+  // Use a fixed-size array for copied_path or allocate dynamically
   char copied_path[PATH_MAX + 1];
   strcpy(copied_path, path);
 
@@ -89,18 +89,19 @@ char *find_path(info_t *info, char *path, char *command) {
 }
 
 void preprocess_command(info_t *info, char *input) {
-  /* Use standard C comments */
-  /* Detect and remove comments */
+  // Use standard C comments
+
+  // Detect and remove comments
   char *comment_start = strchr(input, '#');
   if (comment_start != NULL) {
-    *comment_start = '\0'; 
+    *comment_start = '\0';
   }
 
-  /* Replace variables */
+  // Replace variables
   int i = 0;
   while (input[i] != '\0') {
     if (input[i] == '$') {
-      /* Check for special variables like $? and $$ */
+      // Check for special variables like $? and $$
       if (input[i + 1] == '?' || input[i + 1] == '$') {
         char buffer[10];
         if (input[i + 1] == '?') {
@@ -113,20 +114,20 @@ void preprocess_command(info_t *info, char *input) {
         memset(input + i + replace_len, '\0', strlen(input) - i - replace_len);
         i += replace_len - 1;
       } else {
-        /* Handle environment variables */
-        int j = i + 1;
+        // Handle environment variables
+        int j= i + 2;
         while (isalnum(input[j]) || input[j] == '_') {
           j++;
         }
-        /* Use a fixed-size array or dynamically allocate memory */
+        // Use a fixed-size array or dynamically allocate memory
         char var_name[j - i - 1];
         strncpy(var_name, input + i + 1, j - i - 1);
-   var_name[j - i - 1] = '\0';
+        var_name[j - i - 1] = '\0';
 
-        /* Lookup the environment variable */
+        // Lookup the environment variable
         char *var_value = getenv(var_name);
         if (var_value != NULL) {
-          /* Replace the variable with its value */
+          // Replace the variable with its value
           int replace_len = strlen(var_value);
           memmove(input + i, var_value, replace_len);
           memset(input + i + replace_len, '\0', strlen(input) - i - replace_len);
