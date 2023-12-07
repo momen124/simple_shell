@@ -19,16 +19,14 @@ void free_info(info_t *info, int full) {
         free(info->path);
     }
     if (info->env) {
-        free_list(&(info->env));
+        free_list(&(info->env)); 
     }
     if (info->history) {
-        free_list(&(info->history));
+        free_list(&(info->history)); 
     }
     if (info->alias) {
-        free_list(&(info->alias));
+        free_list(&(info->alias)); 
     }
-    
-    free(info->cmd_buf);
     if (full) {
         free(info->cmd_buf);
     }
