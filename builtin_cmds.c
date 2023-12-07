@@ -1,5 +1,6 @@
 #include "shell.h"
 #define INFO_INIT info_init()
+
 /**
  * _myexit - Implementation of the exit command.
  * @info: Pointer to the info_t structure.
@@ -7,7 +8,7 @@
  */
 int _myexit(info_t *info)
 {
-    (void)info; 
+    (void)info;
     exit(0);
 }
 
@@ -20,7 +21,8 @@ int _myenv(info_t *info)
 {
     (void)info;
 
-    extern char **environ;
+    extern char **environ;  // Move the declaration to the beginning
+
     int i;
 
     for (i = 0; environ[i] != NULL; i++)
@@ -29,6 +31,7 @@ int _myenv(info_t *info)
     }
     return 0;
 }
+
 
 /**
  * _myhelp - Implementation of the help command.
