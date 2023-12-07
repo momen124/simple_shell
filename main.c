@@ -4,10 +4,9 @@
  * main - Entry point for the shell program.
  * Return: Exit status.
  */
-nt main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-  info_t info = {0}; // Move the declaration here
-
+  info_t info = {0}; 
   if (argc > 1) {
     freopen(argv[1], "r", stdin);
   }
