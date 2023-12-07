@@ -5,13 +5,6 @@
  * @info: Pointer to the info_t structure.
  * @input: Input command string.
  */
-#include "shell.h"
-
-/**
- * tokenize_command - Tokenize the input command string.
- * @info: Pointer to the info_t structure.
- * @input: Input command string.
- */
 void tokenize_command(info_t *info, char *input)
 {
     char *token;
@@ -24,7 +17,7 @@ void tokenize_command(info_t *info, char *input)
         exit(EXIT_FAILURE);
     }
 
-    size_t i; 
+    size_t i; // Move the declaration to the beginning
 
     token = strtok(input, " \t\r\n\a");
     while (token != NULL)
@@ -34,7 +27,7 @@ void tokenize_command(info_t *info, char *input)
         {
             perror("strdup");
 
-            for (i = 0; i < token_count; i++) 
+            for (i = 0; i < token_count; i++)
             {
                 free(tokens[i]);
             }
@@ -56,8 +49,8 @@ void tokenize_command(info_t *info, char *input)
  */
 void free_info_tokens(info_t *info)
 {
-    size_t i;  
-    
+    size_t i;
+
     for (i = 0; i < info->token_count; i++)
     {
         free(info->tokens[i]);
@@ -84,7 +77,7 @@ int find_builtin(info_t *info)
         {"cd", _mycd},
         {"alias", _myalias},
         {NULL, NULL}};
-    size_t i;  
+    size_t i;
 
     for (i = 0; builtins[i].type; i++)
     {
