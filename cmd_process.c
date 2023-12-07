@@ -23,7 +23,7 @@ void tokenize_command(info_t *info, char *input)
         if (!tokens[token_count])
         {
             perror("strdup");
-            
+            int i;
             for (size_t i = 0; i < token_count; i++)
             {
                 free(tokens[i]);
@@ -36,9 +36,7 @@ void tokenize_command(info_t *info, char *input)
     }
     tokens[token_count] = NULL;
 
-    // Free existing tokens if any
-    free_info_tokens(info);
-
+    
     info->tokens = tokens;
     info->token_count = token_count;
 }
@@ -49,6 +47,7 @@ void tokenize_command(info_t *info, char *input)
  */
 void free_info_tokens(info_t *info)
 {
+    int i;
     for (size_t i = 0; i < info->token_count; i++)
     {
         free(info->tokens[i]);

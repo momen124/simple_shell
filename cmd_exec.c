@@ -57,6 +57,7 @@ void execute_command(info_t *info)
  */
 char *find_path(info_t *info, char *path, char *command)
 {
+    (void)info;
     char *token, *full_path;
     struct stat st;
 
