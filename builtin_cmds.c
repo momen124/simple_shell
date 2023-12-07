@@ -19,10 +19,9 @@ int _myexit(info_t *info)
  */
 int _myenv(info_t *info)
 {
+    extern char **environ;  
+
     (void)info;
-
-    extern char **environ;  // Move the declaration to the beginning
-
     int i;
 
     for (i = 0; environ[i] != NULL; i++)
@@ -31,6 +30,7 @@ int _myenv(info_t *info)
     }
     return 0;
 }
+
 
 
 /**
