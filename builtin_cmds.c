@@ -16,15 +16,18 @@ int _myexit(info_t *info)
  * @info: Pointer to the info_t structure.
  * Return: Always returns 0.
  */
-int _myenv(info_t *info) {
-  (void)info;
-  
-  extern char **environ;
-  int i; 
-  for (i = 0; environ[i] != NULL; i++) {
-    printf("%s\n", environ[i]);
-  }
-  return 0;
+int _myenv(info_t *info)
+{
+    (void)info;
+
+    extern char **environ;
+    int i;
+
+    for (i = 0; environ[i] != NULL; i++)
+    {
+        printf("%s\n", environ[i]);
+    }
+    return 0;
 }
 
 /**
