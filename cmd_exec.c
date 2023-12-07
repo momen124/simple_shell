@@ -58,7 +58,8 @@ void execute_command(info_t *info)
 char *find_path(info_t *info, char *path, char *command)
 {
     (void)info;
-    char *token, *full_path;
+    char *token;
+    char *full_path;
     struct stat st;
 
     token = strtok(path, ":");
@@ -67,14 +68,14 @@ char *find_path(info_t *info, char *path, char *command)
         full_path = malloc(strlen(token) + strlen(command) + 2);
         if (!full_path)
         {
-            return NULL; 
+            return NULL;
         }
-        
+
         sprintf(full_path, "%s/%s", token, command);
 
         if (stat(full_path, &st) == 0)
         {
-            return full_path; 
+            return full_path;
         }
 
         free(full_path);
