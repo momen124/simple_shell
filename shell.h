@@ -106,7 +106,7 @@ void fork_cmd(info_t *);
 /* toem_parser.c */
 int is_cmd(info_t *, char *);
 char *dup_chars(char *, int, int);
-char *find_path(info_t *, char *, char *);
+char *find_path(info_t *info, char *path, char *command);
 
 /* loophsh.c */
 int loophsh(char **);
@@ -195,7 +195,7 @@ int _myalias(info_t *);
 
 /*toem_getline.c */
 size_t get_input(info_t *);
-size_t _getline(info_t *info, char **line, size_t *n);
+size_t _getline(char **line, size_t *n, info_t *info __attribute__((unused)));
 int checkForEOF(char *);
 void sigintHandler(int);
 

@@ -18,7 +18,7 @@ int _myexit(info_t *info)
  */
 int _myenv(info_t *info) {
   (void)info;
-  int i; // Move declaration before the loop
+  int i; 
   extern char **environ;
   for (i = 0; environ[i] != NULL; i++) {
     printf("%s\n", environ[i]);

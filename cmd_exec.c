@@ -55,7 +55,7 @@ void execute_command(info_t *info)
  * @command: The command to find.
  * Return: The full path of the command.
  */
-char *find_path(info_t *info, const char *path, const char *command) 
+char *find_path(info_t *info, char *path, char *command);
 {
     (void)info;
     (void)path;
