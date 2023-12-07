@@ -1,188 +1,250 @@
-#include "shell.h"
+#ifndef _SHELL_H_
+#define _SHELL_H_
 
-/**
- * Frees all dynamically allocated memory in a linked list of strings.
- *
- * @param head Pointer to the head of the linked list.
- */
-void free_list(list_t **head) {
-  while (*head) {
-    list_t *temp = *head;
-    *head = (*head)->next;
-    free(temp->str);
-    free(temp);
-  }
-}
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <stddef.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <limits.h>
+#include <fcntl.h>
+#include <errno.h>
 
-/**
- * Frees all dynamically allocated memory associated with the info structure.
- *
- * @param info Pointer to the info structure.
- * @param full Whether to free the command buffer.
- */
-void free_info(info_t *info, int full) {
-  size_t i;
+/* for read/write buffers */
+#define READ_BUF_SIZE 1024
+#define WRITE_BUF_SIZE 1024
+#define BUF_FLUSH -1
 
-  for (i = 0; i < info->token_count; i++) {
-    free(info->tokens[i]);
-  }
-  free(info->tokens);
+/* for command chaining */
+#define CMD_NORM 0
+#define CMD_OR 1
+#define CMD_AND 2
+#define CMD_CHAIN 3
 
-  if (info->path) {
-    free(info->path);
-  }
+/* for convert_number() */
+#define CONVERT_LOWERCASE 1
+#define CONVERT_UNSIGNED 2
 
-  if (info->env) {
-    free_list(&(info->env));
-  }
+/* 1 if using system getline() */
+#define USE_GETLINE 0
+#define USE_STRTOK 0
 
-  if (info->history) {
-    free_list(&(info->history));
-  }
+#define HIST_FILE ".simple_shell_history"
+#define HIST_MAX 4096
 
-  if (info->alias) {
-    free_list(&(info->alias));
-  }
+extern void info_init(void);
 
-  if (full) {
-    free(info->cmd_buf);
-  }
 
-  if (info->error_message) {
-    free(info->error_message);
-  }
+extern char **environ;
 
-  free(info);
-}
 
-/**
- * Duplicates a string into newly allocated memory.
- *
- * @param s String to duplicate.
- * @return Pointer to the newly allocated string, or NULL on error.
- */
-char *strdup(const char *s) {
-  size_t size = strlen(s) + 1;
-  char *new_str = malloc(size);
+typedef struct liststr {
+    int num;
+    char *str;
+    struct liststr *next;
+} list_t;
 
-  if (!new_str) {
-    perror("malloc");
-    return NULL;
-  }
+typedef struct info
+{
+	char *arg;
+	char **argv;
+	char *path;
+	int argc;
+	unsigned int line_count;
+	int err_num;
+	int linecount_flag;
+	char *fname;
+	list_t *env;
+	list_t *history;
+	list_t *alias;
+	char **environ;
+	int env_changed;
+	int status;
+	char **cmd_buf;	  /* pointer to cmd ; chain buffer, for memory management */
+	int cmd_buf_type; /* CMD_type ||, &&, ; */
+	int readfd;
+	int histcount;
 
-  memcpy(new_str, s, size);
-  return new_str;
-}
+	char **tokens;
+	size_t token_count;
+	char *error_message;
+} info_t;
 
-/**
- * Finds the full path of a command using the PATH environment variable.
- *
- * @param info Pointer to the info structure.
- * @param path The PATH environment variable.
- * @param command The command name.
- * @return Pointer to the full path of the command, or NULL on error.
- */
-char *find_path(info_t *info, char *path, char *command) {
-  char *token;
-  char *full_path;
-  struct stat st;
-  (void)info;
 
-  if (!path) {
-    perror("Error: PATH environment variable not set");
-    return NULL;
-  }
+size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n);
 
-  char *copied_path = strdup(path);
+/* Function prototypes */
+void display_prompt();
+char *read_user_input();
+void tokenize_command(info_t *info, char *input);
+int find_builtin(info_t *info);
+void find_and_execute_command(info_t *info);
+void execute_command(info_t *info);
+void free_info(info_t *info, int full_cleanup);
 
-  if (!copied_path) {
-    return NULL;
-  }
+typedef struct builtin
+{
+	char *type;
+	int (*func)(info_t *);
+} builtin_table;
 
-  token = strtok(copied_path, ":");
+/*helper.c*/
+void free_list(list_t **head);
+char *find_path(info_t *info, char *path, char *command);
+void preprocess_command(info_t *info, char *input);
+/* toem_shloop.c */
+int hsh(info_t *, char **);
+int find_builtin(info_t *);
+void find_cmd(info_t *);
+void fork_cmd(info_t *);
 
-  while (token != NULL) {
-    full_path = malloc(strlen(token) + strlen(command) + 2);
+/* toem_parser.c */
+int is_cmd(info_t *, char *);
+char *dup_chars(char *, int, int);
+char *find_path(info_t *info, char *path, char *command);
 
-    if (!full_path) {
-      free(copied_path);
-      perror("malloc");
-      return NULL;
-    }
+/* loophsh.c */
+int loophsh(char **);
 
-    sprintf(full_path, "%s/%s", token, command);
+/* toem_errors.c */
+void _eputs(char *);
+int _eputchar(char);
+int _putfd(char c, int fd);
+int _putsfd(char *str, int fd);
 
-    if (stat(full_path, &st) == 0) {
-      free(copied_path);
-      return full_path;
-    }
+/* toem_string.c */
+int _strlen(char *);
+int _strcmp(char *, char *);
+char *starts_with(const char *, const char *);
+char *_strcat(char *, char *);
 
-    free(full_path);
-    token = strtok(NULL, ":");
-  }
+/* toem_string1.c */
+char *_strcpy(char *, char *);
+char *_strdup(const char *);
+void _puts(char *);
+int _putchar(char);
 
-  free(copied_path);
+/* toem_exits.c */
+char *_strncpy(char *, char *, int);
+char *_strncat(char *, char *, int);
+char *_strchr(char *, char);
 
-  perror("Command not found in PATH");
-  return NULL;
-}
+/* toem_tokenizer.c */
+char **strtow(char *, char *);
+char **strtow2(char *, char);
 
-/**
- * Preprocesses the user input by removing comments and replacing variables.
- *
- * @param info Pointer to the info structure.
- * @param input User input string.
- */
-void preprocess_command(info_t *info, char *input) {
-  // Use standard C comments
+/* toem_realloc.c */
+char *_memset(char *, char, unsigned int);
+void ffree(char **);
+void *_realloc(void *, unsigned int, unsigned int);
 
-  // Detect and remove comments
-  char *comment_start = strchr(input, '#');
+/* toem_memory.c */
+int bfree(void **);
 
-  if (comment_start != NULL) {
-    *comment_start = '\0';
-  }
+/* toem_atoi.c */
+int interactive(info_t *);
+int is_delim(char, char *);
+int _isalpha(int);
+int _atoi(char *);
 
-  int i = 0;
-  while (input[i] != '\0') {
-    if (input[i] == '$') 
-	{
-      if (input[i + 1] == '?' || input[i + 1] == '$') {
-        char buffer[10];
+/* toem_errors1.c */
+int _erratoi(char *);
+void print_error(info_t *, char *);
+int print_d(int, int);
+char *convert_number(long int, int, int);
+void remove_comments(char *);
 
-        if (input[i + 1] == '?') {
-          sprintf(buffer, "%d", info->status);
-        } else {
-          sprintf(buffer, "%d", getpid());
-        }
 
-        int replace_len = strlen(buffer);
-        memmove(input + i, buffer, replace_len);
-        memset(input + i + replace_len, '\0', strlen(input) - i - replace_len);
-        i += replace_len - 1;
-      } else {
+/* Built-in commands */
+int _myexit(info_t *info);
+int _myenv(info_t *info);
+int _myhelp(info_t *info);
+int _myhistory(info_t *info); 
+int _mysetenv(info_t *info);
+int _myunsetenv(info_t *info);
+int _mycd(info_t *info);
+int _myalias(info_t *info);
 
-        int j = i + 2;
+/* Command execution */
+void find_and_execute_command(info_t *info); 
+void execute_command(info_t *info);
 
-        while (isalnum(input[j]) || input[j] == '_') {
-          j++;
-        }
+/* Command processing */
+void tokenize_command(info_t *info, char *input); 
+int find_builtin(info_t *info); 
 
-        char var_name[MAX_VAR_NAME_LENGTH];
-        strncpy(var_name, input + i + 1, j - i - 1);
-        var_name[j - i - 1] = '\0';
+/* Error handling*/
+void report_error(const char *error_message); 
+/* Helpers*/
+void free_info(info_t *info, int full);
+char *strdup(const char *s); 
 
-        char *var_value = getenv(var_name);
+/* toem_builtin.c */
+int _myexit(info_t *);
+int _mycd(info_t *);
+int _myhelp(info_t *);
 
-        if (var_value != NULL) 
-		{
-          int replace_len = strlen(var_value);
-          memmove(input + i, var_value, replace_len);
-          memset(input + i + replace_len, '\0', strlen(input) - i - replace_len);
-          i += replace_len - 1;
-        }
-      }
-    }
-    i++;
-  }
-}
+/* toem_builtin1.c */
+int _myhistory(info_t *);
+int _myalias(info_t *);
+
+/*toem_getline.c */
+size_t get_input(info_t *);
+
+int checkForEOF(char *);
+void sigintHandler(int);
+
+/* toem_getinfo.c */
+void clear_info(info_t *);
+void set_info(info_t *, char **);
+void free_info(info_t *, int);
+
+/* toem_environ.c */
+char *_getenv(info_t *, const char *);
+int _myenv(info_t *);
+int _mysetenv(info_t *);
+int _myunsetenv(info_t *);
+int populate_env_list(info_t *);
+
+/* toem_getenv.c */
+char **get_environ(info_t *);
+int _unsetenv(info_t *, char *);
+int _setenv(info_t *, char *, char *);
+
+/* toem_history.c */
+char *get_history_file(info_t *info);
+int write_history(info_t *info);
+int read_history(info_t *info);
+int build_history_list(info_t *info, char *buf, int linecount);
+int renumber_history(info_t *info);
+
+/* toem_lists.c */
+list_t *add_node(list_t **, const char *, int);
+list_t *add_node_end(list_t **, const char *, int);
+size_t print_list_str(const list_t *);
+int delete_node_at_index(list_t **, unsigned int);
+void free_list(list_t **);
+
+/* toem_lists1.c */
+size_t list_len(const list_t *);
+char **list_to_strings(list_t *);
+size_t print_list(const list_t *);
+list_t *node_starts_with(list_t *, char *, char);
+ssize_t get_node_index(list_t *, list_t *);
+
+/* toem_vars.c */
+int is_chain(info_t *, char *, size_t *);
+void check_chain(info_t *, char *, size_t *, size_t, size_t);
+int replace_alias(info_t *);
+int replace_vars(info_t *);
+int replace_string(char **, char *);
+
+void free_info(info_t *info, int full_cleanup);
+void tokenize_command(info_t *info, char *input);
+void execute_command(info_t *info);
+void display_error(info_t *info);
+
+#endif
