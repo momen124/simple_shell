@@ -59,8 +59,8 @@ char *find_path(info_t *info, char *path, char *command)
 {
     char *token;
     char *full_path;
-    (void)info;
     struct stat st;
+    (void)info;
 
     token = strtok(path, ":");
     while (token != NULL)
