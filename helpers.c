@@ -1,6 +1,5 @@
 #include "shell.h"
 
-
 void free_list(list_t **head) {
     while (*head) {
         list_t *temp = *head;
@@ -9,6 +8,7 @@ void free_list(list_t **head) {
         free(temp);
     }
 }
+
 void free_info(info_t *info, int full) {
     size_t i;
     for (i = 0; i < info->token_count; i++) {
@@ -19,14 +19,16 @@ void free_info(info_t *info, int full) {
         free(info->path);
     }
     if (info->env) {
-        free_list(info->env);
+        free_list(&(info->env));
     }
     if (info->history) {
-        free_list(info->history); 
+        free_list(&(info->history));
     }
     if (info->alias) {
-        free_list(info->alias); 
+        free_list(&(info->alias));
     }
+    
+    free(info->cmd_buf);
     if (full) {
         free(info->cmd_buf);
     }
@@ -36,13 +38,12 @@ void free_info(info_t *info, int full) {
     free(info);
 }
 
-
 char *strdup(const char *s) {
-  size_t size = strlen(s) + 1;
-  char *new_str = malloc(size);
-  if (!new_str) {
-    return NULL;
-  }
-  memcpy(new_str, s, size);
-  return new_str;
+    size_t size = strlen(s) + 1;
+    char *new_str = malloc(size);
+    if (!new_str) {
+        return NULL;
+    }
+    memcpy(new_str, s, size);
+    return new_str;
 }

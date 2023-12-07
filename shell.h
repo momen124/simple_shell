@@ -68,12 +68,12 @@ typedef struct info
 	char *error_message;
 } info_t;
 
-
 typedef struct liststr {
     int num;
     char *str;
     struct liststr *next;
 } list_t;
+
 
 size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n);
 
