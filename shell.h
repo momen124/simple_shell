@@ -91,6 +91,10 @@ typedef struct builtin
 	int (*func)(info_t *);
 } builtin_table;
 
+/*helper.c*/
+void free_list(list_t **head);
+char *find_path(info_t *info, char *path, char *command);
+void preprocess_command(info_t *info, char *input);
 /* toem_shloop.c */
 int hsh(info_t *, char **);
 int find_builtin(info_t *);
