@@ -5,6 +5,13 @@
  * @info: Pointer to the info_t structure.
  * @input: Input command string.
  */
+#include "shell.h"
+
+/**
+ * tokenize_command - Tokenize the input command string.
+ * @info: Pointer to the info_t structure.
+ * @input: Input command string.
+ */
 void tokenize_command(info_t *info, char *input)
 {
     char *token;
@@ -17,17 +24,17 @@ void tokenize_command(info_t *info, char *input)
         exit(EXIT_FAILURE);
     }
 
-    token = strtok(input, " \t\r\n\a");
-    
-    size_t i;  
+    size_t i; 
 
+    token = strtok(input, " \t\r\n\a");
     while (token != NULL)
     {
         tokens[token_count] = strdup(token);
         if (!tokens[token_count])
         {
             perror("strdup");
-            for (i = 0; i < token_count; i++)
+
+            for (i = 0; i < token_count; i++) 
             {
                 free(tokens[i]);
             }
