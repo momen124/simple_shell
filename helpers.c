@@ -1,3 +1,5 @@
+#include "shell.h"
+
 void free_info(info_t *info, int full) {
   for (size_t i = 0; i < info->token_count; i++) {
     free(info->tokens[i]);
