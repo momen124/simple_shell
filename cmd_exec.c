@@ -8,9 +8,6 @@ void find_and_execute_command(info_t *info)
 {
     char *path = getenv("PATH");
     char *full_path = find_path(info, path, info->tokens[0]);
-    char *token;
-    char *full_path;
-    struct stat st;
 
     if (full_path)
     {
