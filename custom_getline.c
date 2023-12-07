@@ -4,7 +4,6 @@ size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n)
 {
     size_t pos = 0;
     char *new_line = NULL;
-    size_t size = 0;
     int bytesRead = 0;
 
     if (*line == NULL)

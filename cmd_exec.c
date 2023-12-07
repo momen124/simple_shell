@@ -66,21 +66,3 @@ char *find_path(info_t *info __attribute__((unused)), char *path __attribute__((
     strcpy(full_path, command);
     return full_path;
 }
-/**
- * find_path - Find the full path of the command.
- * @info: Pointer to the info_t structure. (Unused)
- * @path: The PATH environment variable. (Unused)
- * @command: The command to find.
- * Return: The full path of the command.
- */
-char *find_path(info_t *info __attribute__((unused)), char *path __attribute__((unused)), char *command)
-{
-    char *full_path;
-    full_path = malloc(strlen(command) + 1);
-    if (!full_path)
-    {
-        return NULL;
-    }
-    strcpy(full_path, command);
-    return full_path;
-}
