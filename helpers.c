@@ -101,6 +101,7 @@ void preprocess_command(info_t *info, char *input) {
 
   /* Move declarations to the beginning */
   char var_name[MAX_VAR_NAME_LENGTH];
+  char *var_value; // Declare var_value here
 
   while (input[i] != '\0') {
     if (input[i] == '$') {
@@ -126,7 +127,7 @@ void preprocess_command(info_t *info, char *input) {
         var_name[j - i - 1] = '\0';
 
         /* Lookup the environment variable */
-        char *var_value = getenv(var_name);
+        var_value = getenv(var_name);
         if (var_value != NULL) {
           /* Replace the variable with its value */
           replace_len = strlen(var_value);

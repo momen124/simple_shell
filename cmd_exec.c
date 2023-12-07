@@ -55,44 +55,43 @@ void execute_command(info_t *info)
  * @command: The command to find.
  * Return: The full path of the command.
  */
-char *find_path(info_t *info, char *path, char *command)
-{
-    char *token;
-    char *full_path;
-    struct stat st;
-    (void)info;
+char *find_path(info_t *info, char *path, char *command) {
+  char *token;
+  char *full_path;
+  struct stat st;
+  (void)info;
 
-    /* Move the declaration to the beginning of the function */
-    char copied_path[PATH_MAX + 1];
-    
-    if (!path) {
-        fprintf(stderr, "Error: PATH environment variable not set\n");
-        return NULL;
-    }
-
-    strcpy(copied_path, path);
-
-    token = strtok(copied_path, ":");
-    while (token != NULL) {
-        full_path = malloc(strlen(token) + strlen(command) + 2);
-        if (!full_path) {
-            return NULL;
-        }
-
-        sprintf(full_path, "%s/%s", token, command);
-
-        if (stat(full_path, &st) == 0) {
-            return full_path;
-        }
-
-        free(full_path);
-        token = strtok(NULL, ":");
-    }
-
-    if (full_path) {
-        free(full_path);
-    }
-
-    fprintf(stderr, "Command not found in PATH: %s\n", command);
+  if (!path) {
+    fprintf(stderr, "Error: PATH environment variable not set\n");
     return NULL;
+  }
+
+  /* Move the declaration to the beginning of the function */
+  char copied_path[PATH_MAX + 1];
+  strcpy(copied_path, path);
+
+  token = strtok(copied_path, ":");
+  while (token != NULL) {
+    full_path = malloc(strlen(token) + strlen(command) + 2);
+    if (!full_path) {
+      perror("malloc");
+      return NULL;
+    }
+
+    sprintf(full_path, "%s/%s", token, command);
+
+    if (stat(full_path, &st) == 0) {
+      return full_path;
+    }
+
+    free(full_path);
+    token = strtok(NULL, ":");
+  }
+
+  if (full_path) {
+    free(full_path);
+  }
+
+  fprintf(stderr, "Command not found in PATH: %s\n", command);
+  return NULL;
 }
