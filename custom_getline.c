@@ -1,5 +1,5 @@
 #include "shell.h"
-ssize_t _getline(char **line, size_t *n, info_t *info __attribute__((unused))) {
+size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n);
 
     size_t pos = 0;
     char *new_line = NULL;

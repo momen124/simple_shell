@@ -55,16 +55,14 @@ void execute_command(info_t *info)
  * @command: The command to find.
  * Return: The full path of the command.
  */
-char *find_path(info_t *info, char *path, char *command);
+char *find_path(info_t *info, char *path, char *command)
 {
-    (void)info;
-    (void)path;
     char *full_path;
-full_path = malloc(strlen(command) + 1);
-if (!full_path) {
-  
-  return NULL;
-}
-strcpy(full_path, command);
-return full_path;
+    full_path = malloc(strlen(command) + 1);
+    if (!full_path)
+    {
+        return NULL;
+    }
+    strcpy(full_path, command);
+    return full_path;
 }
