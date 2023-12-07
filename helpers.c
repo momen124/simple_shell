@@ -1,4 +1,5 @@
 #include "shell.h"
+#define MAX_VAR_NAME_LENGTH 256 
 
 void free_list(list_t **head) {
   while (*head) {
@@ -98,6 +99,9 @@ void preprocess_command(info_t *info, char *input) {
   int replace_len = 0;
   int j = 0;
 
+  /* Move declarations to the beginning */
+  char var_name[MAX_VAR_NAME_LENGTH];
+
   while (input[i] != '\0') {
     if (input[i] == '$') {
       /* Check for special variables like $? and $$ */
@@ -118,7 +122,6 @@ void preprocess_command(info_t *info, char *input) {
           j++;
         }
         /* Use a fixed-size array */
-        char var_name[MAX_VAR_NAME_LENGTH];
         strncpy(var_name, input + i + 1, j - i - 1);
         var_name[j - i - 1] = '\0';
 

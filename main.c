@@ -7,12 +7,12 @@
 int main(int argc, char *argv[])
 {
     info_t info = {0}; 
+    char *user_input;
+    int builtin_ret;
+
     if (argc > 1) {
         freopen(argv[1], "r", stdin);
     }
-
-    char *user_input;
-    int builtin_ret;
 
     while (1) {
         display_prompt();
