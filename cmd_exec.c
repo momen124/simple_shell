@@ -59,11 +59,11 @@ char *find_path(info_t *info, char *path, char *command)
 {
     (void)info;
 
+    /* Move the declaration to the beginning */
     char *token;
     char *full_path;
     struct stat st;
 
-    /* Move the declaration to the beginning */
     token = strtok(path, ":");
     while (token != NULL)
     {
