@@ -1,7 +1,14 @@
 #include "shell.h"
 
 
-
+void free_list(list_t **head) {
+    while (*head) {
+        list_t *temp = *head;
+        *head = (*head)->next;
+        free(temp->str);
+        free(temp);
+    }
+}
 void free_info(info_t *info, int full) {
 size_t i;
 for (i = 0; i < info->token_count; i++) {
