@@ -48,46 +48,6 @@ char *strdup(const char *s) {
   return new_str;
 }
 
-char *find_path(info_t *info, char *path, char *command) {
-  char *token;
-  char *full_path;
-  struct stat st;
-  char copied_path[PATH_MAX + 1]; 
-
-  (void)info;
-
-  if (!path) {
-    perror("Error: PATH environment variable not set");
-    return NULL;
-  }
-
-  strcpy(copied_path, path);
-
-  token = strtok(copied_path, ":");
-  while (token != NULL) {
-    full_path = malloc(strlen(token) + strlen(command) + 2);
-    if (!full_path) {
-      perror("malloc");
-      return NULL;
-    }
-
-    sprintf(full_path, "%s/%s", token, command);
-
-    if (stat(full_path, &st) == 0) {
-      return full_path;
-    }
-
-    free(full_path);
-    token = strtok(NULL, ":");
-  }
-
-  if (full_path) {
-    free(full_path);
-  }
-
-  perror("Command not found in PATH");
-  return NULL;
-}
 
 void preprocess_command(info_t *info, char *input) {
   /* Use standard C comments */
