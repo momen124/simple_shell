@@ -59,15 +59,14 @@ char *find_path(info_t *info, char *path, char *command) {
   char *token;
   char *full_path;
   struct stat st;
+  char copied_path[PATH_MAX + 1]; 
   (void)info;
 
   if (!path) {
-    fprintf(stderr, "Error: PATH environment variable not set\n");
+    perror("Error: PATH environment variable not set");
     return NULL;
   }
 
-  /* Move the declaration to the beginning of the function */
-  char copied_path[PATH_MAX + 1];
   strcpy(copied_path, path);
 
   token = strtok(copied_path, ":");
@@ -92,6 +91,6 @@ char *find_path(info_t *info, char *path, char *command) {
     free(full_path);
   }
 
-  fprintf(stderr, "Command not found in PATH: %s\n", command);
+  perror("Command not found in PATH");
   return NULL;
 }

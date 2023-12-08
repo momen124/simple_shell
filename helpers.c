@@ -52,6 +52,8 @@ char *find_path(info_t *info, char *path, char *command) {
   char *token;
   char *full_path;
   struct stat st;
+  char copied_path[PATH_MAX + 1]; 
+
   (void)info;
 
   if (!path) {
@@ -59,7 +61,6 @@ char *find_path(info_t *info, char *path, char *command) {
     return NULL;
   }
 
-  char copied_path[PATH_MAX + 1];
   strcpy(copied_path, path);
 
   token = strtok(copied_path, ":");
@@ -101,7 +102,7 @@ void preprocess_command(info_t *info, char *input) {
 
   /* Move declarations to the beginning */
   char var_name[MAX_VAR_NAME_LENGTH];
-  char *var_value; // Declare var_value here
+  char *var_value; 
 
   while (input[i] != '\0') {
     if (input[i] == '$') {
