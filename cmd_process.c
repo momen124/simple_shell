@@ -1,5 +1,3 @@
-#include "shell.h"
-
 /**
  * tokenize_command - Tokenize the input command string.
  * @info: Pointer to the info_t structure.
@@ -81,8 +79,8 @@ for (i = 0; builtins[i].type; i++)
 {
 if (strcmp(info->tokens[0], builtins[i].type) == 0)
 {
-return builtins[i].func(info);
+return (builtins[i].func(info));
 }
 }
-return -1;
+return (-1);
 }
