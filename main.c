@@ -6,42 +6,50 @@
  */
 int main(int argc, char *argv[])
 {
-    info_t info = {0}; 
-    char *user_input;
-    int builtin_ret;
+info_t info = {0}; 
+char *user_input;
+int builtin_ret;
 
-    if (argc > 1) {
-        freopen(argv[1], "r", stdin);
-    }
+if (argc > 1) 
+{
+freopen(argv[1], "r", stdin);
+}
 
-    while (1) {
-        display_prompt();
-        user_input = read_user_input();
+while (1) 
+{
+display_prompt();
+user_input = read_user_input();
 
-        if (user_input == NULL) {
-            break; /* End of file or an error */
-        }
+if (user_input == NULL) 
+{
+break; 
+/* End of file or an error */
+}
 
-        tokenize_command(&info, user_input);
-        if (info.token_count > 0)
-        {
-            builtin_ret = find_builtin(&info);
-            if (builtin_ret == 0)
-            {
-                continue; /* Built-in command executed, continue loop */
-            }
-            else if (builtin_ret < 0)
-            {
-                find_and_execute_command(&info); /* Find and execute non-built-in command */
-            }
-        }
+tokenize_command(&info, user_input);
+if (info.token_count > 0)
+{
+builtin_ret = find_builtin(&info);
+if (builtin_ret == 0)
+{
+continue; 
+/* Built-in command executed, continue loop */
+}
+else if (builtin_ret < 0)
+{
+find_and_execute_command(&info); 
+/* Find and execute non-built-in command */
+}
+}
 
-        free_info(&info, 0); /* Reset info for the next iteration */
-        free(user_input);
-    }
+free_info(&info, 0); 
+/* Reset info for the next iteration */
+free(user_input);
+}
 
-    free_info(&info, 1); /* Clean up before exiting */
-    return info.status;
+free_info(&info, 1); 
+/* Clean up before exiting */
+return info.status;
 }
 
 /**
@@ -49,7 +57,7 @@ int main(int argc, char *argv[])
  */
 void display_prompt(void)
 {
-    printf("$ ");
+printf("$ ");
 }
 
 /**

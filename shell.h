@@ -41,10 +41,11 @@ extern void info_init(void);
 extern char **environ;
 
 
-typedef struct liststr {
-    int num;
-    char *str;
-    struct liststr *next;
+typedef struct liststr 
+{
+int num;
+char *str;
+struct liststr *next;
 } list_t;
 
 typedef struct info
@@ -77,7 +78,7 @@ typedef struct info
 size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n);
 
 /* Function prototypes */
-void display_prompt();
+void display_prompt(void);
 char *read_user_input();
 void tokenize_command(info_t *info, char *input);
 int find_builtin(info_t *info);
@@ -90,6 +91,18 @@ typedef struct builtin
 	char *type;
 	int (*func)(info_t *);
 } builtin_table;
+
+typedef struct alias {
+    char *name;
+    char *value;
+    struct alias *next;
+} alias_t;
+
+/* Function Prototypes */
+alias_t *new_alias(char *name, char *value);
+void add_alias(char *name, char *value);
+void print_aliases();
+int _myalias(info_t *info);
 
 /*helper.c*/
 void free_list(list_t **head);
