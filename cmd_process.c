@@ -1,3 +1,5 @@
+#include "shell.h"
+
 /**
  * tokenize_command - Tokenize the input command string.
  * @info: Pointer to the info_t structure.
