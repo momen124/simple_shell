@@ -7,38 +7,38 @@
  */
 void tokenize_command(info_t *info, char *input)
 {
-    size_t i; 
-    char *token;
-    char **tokens = malloc(READ_BUF_SIZE * sizeof(char *));
-    size_t token_count = 0;
+size_t i;
+char *token;
+char **tokens = malloc(READ_BUF_SIZE * sizeof(char *));
+size_t token_count = 0;
 
-    if (!tokens)
-    {
-        perror("malloc");
-        exit(EXIT_FAILURE);
-    }
+if (!tokens)
+{
+perror("malloc");
+exit(EXIT_FAILURE);
+}
 
-    token = strtok(input, " \t\r\n\a");
-    while (token != NULL)
-    {
-        tokens[token_count] = strdup(token);
-        if (!tokens[token_count])
-        {
-            perror("strdup");
-            for (i = 0; i < token_count; i++)
-            {
-                free(tokens[i]);
-            }
-            free(tokens);
-            exit(EXIT_FAILURE);
-        }
-        token_count++;
-        token = strtok(NULL, " \t\r\n\a");
-    }
-    tokens[token_count] = NULL;
+token = strtok(input, " \t\r\n\a");
+while (token != NULL)
+{
+tokens[token_count] = strdup(token);
+if (!tokens[token_count])
+{
+perror("strdup");
+for (i = 0; i < token_count; i++)
+{
+free(tokens[i]);
+}
+free(tokens);
+exit(EXIT_FAILURE);
+}
+token_count++;
+token = strtok(NULL, " \t\r\n\a");
+}
+tokens[token_count] = NULL;
 
-    info->tokens = tokens;
-    info->token_count = token_count;
+info->tokens = tokens;
+info->token_count = token_count;
 }
 
 /**
@@ -47,15 +47,15 @@ void tokenize_command(info_t *info, char *input)
  */
 void free_info_tokens(info_t *info)
 {
-    size_t i;
+size_t i;
 
-    for (i = 0; i < info->token_count; i++)
-    {
-        free(info->tokens[i]);
-    }
-    free(info->tokens);
-    info->tokens = NULL;
-    info->token_count = 0;
+for (i = 0; i < info->token_count; i++)
+{
+free(info->tokens[i]);
+}
+free(info->tokens);
+info->tokens = NULL;
+info->token_count = 0;
 }
 
 /**
@@ -65,24 +65,24 @@ void free_info_tokens(info_t *info)
  */
 int find_builtin(info_t *info)
 {
-    static const builtin_table builtins[] = {
-        {"exit", _myexit},
-        {"env", _myenv},
-        {"help", _myhelp},
-        {"history", _myhistory},
-        {"setenv", _mysetenv},
-        {"unsetenv", _myunsetenv},
-        {"cd", _mycd},
-        {"alias", _myalias},
-        {NULL, NULL}};
-    size_t i;
+static const builtin_table builtins[] = {
+{"exit", _myexit},
+{"env", _myenv},
+{"help", _myhelp},
+{"history", _myhistory},
+{"setenv", _mysetenv},
+{"unsetenv", _myunsetenv},
+{"cd", _mycd},
+{"alias", _myalias},
+{NULL, NULL}};
+size_t i;
 
-    for (i = 0; builtins[i].type; i++)
-    {
-        if (strcmp(info->tokens[0], builtins[i].type) == 0)
-        {
-            return builtins[i].func(info);
-        }
-    }
-    return -1;
+for (i = 0; builtins[i].type; i++)
+{
+if (strcmp(info->tokens[0], builtins[i].type) == 0)
+{
+return builtins[i].func(info);
+}
+}
+return -1;
 }

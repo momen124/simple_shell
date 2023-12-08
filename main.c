@@ -58,21 +58,21 @@ void display_prompt(void)
  */
 char *read_user_input(void)
 {
-    char *input = NULL;
-    size_t size = 0;
-    ssize_t read_bytes = getline(&input, &size, stdin);
+char *input = NULL;
+size_t size = 0;
+ssize_t read_bytes = getline(&input, &size, stdin);
 
-    if (read_bytes == -1)
-    {
-        free(input);
-        return NULL;
-    }
+if (read_bytes == -1)
+{
+free(input);
+return NULL;
+}
 
-    /* Remove newline character if present */
-    if (input[read_bytes - 1] == '\n')
-    {
-        input[read_bytes - 1] = '\0';
-    }
+/* Remove newline character if present */
+if (input[read_bytes - 1] == '\n')
+{
+input[read_bytes - 1] = '\0';
+}
 
-    return input;
+return input;
 }
