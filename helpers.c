@@ -54,10 +54,10 @@ char *new_str = malloc(size);
 if (!new_str)
 {
 perror("malloc");
-return NULL;
+return (NULL);
 }
 memcpy(new_str, s, size);
-return new_str;
+return (new_str);
 }
 
 void preprocess_command(info_t *info, char *input)
