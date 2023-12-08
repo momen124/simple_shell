@@ -52,14 +52,3 @@ return (-1);
 return (0);
 }
 
-/**
- * _myalias - Implementation of the alias command.
- * @info: Pointer to the info_t structure.
- * Return: Always returns 0.
- */
-int _myalias(info_t *info)
-{
-(void)info;
-printf("Alias feature not implemented.\n");
-return (0);
-}

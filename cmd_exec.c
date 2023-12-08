@@ -65,7 +65,7 @@ char copied_path[PATH_MAX + 1];
 if (!path)
 {
 perror("Error: PATH environment variable not set");
-return NULL;
+return (NULL);
 }
 
 strcpy(copied_path, path);
@@ -77,14 +77,14 @@ full_path = malloc(strlen(token) + strlen(command) + 2);
 if (!full_path)
 {
 perror("malloc");
-return NULL;
+return (NULL);
 }
 
 sprintf(full_path, "%s/%s", token, command);
 
 if (stat(full_path, &st) == 0)
 {
-return full_path;
+return (full_path);
 }
 
 free(full_path);
@@ -97,5 +97,5 @@ free(full_path);
 }
 
 perror("Command not found in PATH");
-return NULL;
+return (NULL);
 }

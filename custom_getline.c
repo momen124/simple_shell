@@ -12,7 +12,6 @@ size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n)
 size_t pos = 0;
 char *new_line = NULL;
 int bytesRead = 0;
- 
 if (*line == NULL)
 {
 *n = READ_BUF_SIZE;
