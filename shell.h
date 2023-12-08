@@ -68,7 +68,7 @@ typedef struct info
 	int cmd_buf_type; /* CMD_type ||, &&, ; */
 	int readfd;
 	int histcount;
-
+	alias_t *alias_head;
 	char **tokens;
 	size_t token_count;
 	char *error_message;
