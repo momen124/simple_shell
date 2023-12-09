@@ -1,4 +1,5 @@
 #include "shell.h"
+char *find_path(info_t *info, char *path, char *command);
 
 /**
  * find_and_execute_command - Find and execute the command specified in info.
