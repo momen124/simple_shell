@@ -40,6 +40,11 @@ extern void info_init(void);
 
 extern char **environ;
 
+typedef struct alias {
+    char *name;
+    char *value;
+    struct alias *next;
+} alias_t;
 
 typedef struct liststr 
 {
@@ -92,16 +97,15 @@ typedef struct builtin
 	int (*func)(info_t *);
 } builtin_table;
 
-typedef struct alias {
-    char *name;
-    char *value;
-    struct alias *next;
-} alias_t;
 
 /* Function Prototypes */
 alias_t *new_alias(char *name, char *value);
-void add_alias(char *name, char *value);
+void add_alias(info_t *info, char *name, char *value);
 void print_aliases();
+alias_t *new_alias(char *name, char *value);
+void add_alias(info_t *info, char *name, char *value);
+void print_aliases(info_t *info);
+int _myalias(info_t *info);
 int _myalias(info_t *info);
 
 /*helper.c*/
