@@ -79,6 +79,11 @@ typedef struct info
 	char *error_message;
 } info_t;
 
+typedef struct operator_command_struct {
+    char **command_list;
+    char **operators;
+    int count;
+} operator_command_struct;
 
 size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n);
 
@@ -90,6 +95,9 @@ int find_builtin(info_t *info);
 void find_and_execute_command(info_t *info);
 void execute_command(info_t *info);
 void free_info(info_t *info, int full_cleanup);
+
+operator_command_struct *parse_operators(char *input);
+void free_operator_commands(operator_command_struct *commands);
 
 typedef struct builtin
 {
