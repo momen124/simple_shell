@@ -28,6 +28,7 @@ perror("strdup");
 for (i = 0; i < token_count; i++)
 {
 free(tokens[i]);
+tokens[i] = NULL;
 }
 free(tokens);
 exit(EXIT_FAILURE);

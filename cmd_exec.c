@@ -92,11 +92,6 @@ free(full_path);
 token = strtok(NULL, ":");
 }
 
-if (full_path)
-{
-free(full_path);
-}
-
 perror("Command not found in PATH");
 return (NULL);
 }
