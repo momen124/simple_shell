@@ -43,3 +43,34 @@ free(commands->command_list);
 free(commands->operators);
 free(commands);
 }
+
+char *find_command_in_PATH(const char *command) {
+char *path = getenv("PATH");
+char *path_dup = strdup(path);
+char *token = strtok(path_dup, ":");
+struct stat st;
+
+while (token != NULL) {
+char *full_path = malloc(strlen(token) + strlen(command) + 2); /* +2 for '/' and '\0' */
+sprintf(full_path, "%s/%s", token, command);
+
+if (stat(full_path, &st) == 0) {
+free(path_dup);
+return full_path;  /* Found executable command */
+}
+
+free(full_path);
+token = strtok(NULL, ":");
+}
+
+free(path_dup);
+return NULL; /* Command not found */
+}
+
+int is_executable(const char *path) {
+struct stat st;
+if (stat(path, &st) == 0) {
+return (st.st_mode & S_IXUSR) || (st.st_mode & S_IXGRP) || (st.st_mode & S_IXOTH);
+}
+return 0;
+}

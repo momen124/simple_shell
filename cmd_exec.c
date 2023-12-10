@@ -5,47 +5,41 @@ char *find_path(info_t *info, char *path, char *command);
  * find_and_execute_command - Find and execute the command specified in info.
  * @info: Pointer to the info_t structure.
  */
-void find_and_execute_command(info_t *info)
-{
-char *path = getenv("PATH");
-char *full_path = find_path(info, path, info->tokens[0]);
+void find_and_execute_command(info_t *info) {
+char *command_path;
 
-if (full_path)
-{
-info->path = full_path;
-execute_command(info);
+if (strchr(info->tokens[0], '/') != NULL) {
+command_path = strdup(info->tokens[0]);
+} else {
+command_path = find_command_in_PATH(info->tokens[0]);
 }
-else
-{
+
+if (command_path != NULL && is_executable(command_path)) {
+execute_command(info, command_path);
+free(command_path);
+} else {
 fprintf(stderr, "Command not found: %s\n", info->tokens[0]);
+free(command_path);
 }
 }
-
 /**
  * execute_command - Execute the command specified in info.
  * @info: Pointer to the info_t structure.
  */
-void execute_command(info_t *info)
-{
-pid_t pid = fork();
-if (pid == 0)
-{
-/* Child process */
-if (execve(info->path, info->tokens, environ) == -1)
-{
+void execute_command(info_t *info, const char *command_path) {
+pid_t pid;
+int status;
+
+pid = fork();
+if (pid == 0) {
+if (execve(command_path, info->argv, environ) == -1) {
 perror("execve");
 exit(EXIT_FAILURE);
 }
-}
-else if (pid < 0)
-{
-/* Error forking */
+} else if (pid < 0) {
 perror("fork");
-}
-else
-{
-/* Parent process */
-waitpid(pid, &(info->status), 0);
+} else {
+waitpid(pid, &status, 0);
 }
 }
 
