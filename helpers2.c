@@ -1,11 +1,13 @@
 #include "shell.h"
 
-operator_command_struct *parse_operators(char *input) {
+operator_command_struct *parse_operators(char *input)
+{
 operator_command_struct *result;
 char *token;
 
 result = malloc(sizeof(operator_command_struct));
-if (!result) {
+if (!result)
+{
 perror("malloc");
 exit(EXIT_FAILURE);
 }
@@ -15,7 +17,8 @@ result->operators = malloc(9 * sizeof(char *));
 result->count = 0;
 
 token = strtok(input, " ");
-while (token != NULL) {
+while (token != NULL)
+{
 if (strcmp(token, "&&") == 0 || strcmp(token, "||") == 0) {
 result->operators[result->count - 1] = strdup(token);
 } else {
