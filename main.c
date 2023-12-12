@@ -22,7 +22,14 @@ display_prompt();
 }
 
 user_input = read_user_input();
-if (user_input == NULL || user_input[0] == '\0') {
+
+/* Check for EOF */
+if (checkForEOF(user_input)) {
+free(user_input);
+continue;
+}
+
+if (user_input[0] == '\0') {
 free(user_input);
 break;
 }
