@@ -93,11 +93,8 @@ char *read_user_input();
 void tokenize_command(info_t *info, char *input);
 int find_builtin(info_t *info);
 void find_and_execute_command(info_t *info);
-void execute_command(info_t *info, const char *command_path);
+void execute_command(info_t *info);
 void free_info(info_t *info, int full_cleanup);
-
-char *find_command_in_PATH(const char *command);
-int is_executable(const char *path);
 
 operator_command_struct *parse_operators(char *input);
 void free_operator_commands(operator_command_struct *commands);
@@ -198,7 +195,7 @@ int _myalias(info_t *info);
 
 /* Command execution */
 void find_and_execute_command(info_t *info); 
-void execute_command(info_t *info, const char *command_path);
+void execute_command(info_t *info);
 
 /* Command processing */
 void tokenize_command(info_t *info, char *input); 
@@ -272,7 +269,7 @@ int replace_string(char **, char *);
 
 void free_info(info_t *info, int full_cleanup);
 void tokenize_command(info_t *info, char *input);
-void execute_command(info_t *info, const char *command_path);
+void execute_command(info_t *info);
 void display_error(info_t *info);
 
 #endif
