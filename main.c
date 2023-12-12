@@ -28,10 +28,15 @@ break;
 }
 
 commands = parse_operators(user_input);
+if (!commands) { 
+free(user_input);
+continue;
+}
 
 for (i = 0; i < commands->count; i++) {
-if ((i > 0 && strcmp(commands->operators[i - 1], "&&") == 0 && last_command_status != 0) ||
-(i > 0 && strcmp(commands->operators[i - 1], "||") == 0 && last_command_status == 0)) {
+if (i > 0 && commands->operators[i - 1] != NULL && 
+((strcmp(commands->operators[i - 1], "&&") == 0 && last_command_status != 0) ||
+ (strcmp(commands->operators[i - 1], "||") == 0 && last_command_status == 0))) {
 continue;
 }
 
@@ -70,19 +75,20 @@ char *read_user_input(void) {
 char *input = NULL;
 size_t size = 0;
 ssize_t read_bytes;
-if (feof(stdin))
-{
+
+if (feof(stdin)) {
 return NULL;
 }
+
 read_bytes = getline(&input, &size, stdin);
-if (read_bytes == -1)
-{
+if (read_bytes == -1) {
 free(input);
 return NULL;
 }
-if (input[read_bytes - 1] == '\n')
-{
+
+if (input[read_bytes - 1] == '\n') {
 input[read_bytes - 1] = '\0';
 }
+
 return input;
 }
