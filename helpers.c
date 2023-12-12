@@ -16,13 +16,19 @@ void free_info(info_t *info, int full)
 {
 size_t i;
 
+if (info->tokens)
+{
 for (i = 0; i < info->token_count; i++)
+{
+if (info->tokens[i])
 {
 free(info->tokens[i]);
 info->tokens[i] = NULL;
 }
+}
 free(info->tokens);
 info->tokens = NULL;
+}
 
 if (info->path)
 {
@@ -35,11 +41,13 @@ if (info->env)
 free_list(&(info->env));
 info->env = NULL;
 }
+
 if (info->history)
 {
 free_list(&(info->history));
 info->history = NULL;
 }
+
 if (info->alias)
 {
 free_list(&(info->alias));
@@ -53,6 +61,7 @@ if (info->cmd_buf)
 free(info->cmd_buf);
 info->cmd_buf = NULL;
 }
+
 if (info->error_message)
 {
 free(info->error_message);
