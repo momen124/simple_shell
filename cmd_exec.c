@@ -6,41 +6,50 @@
  */
 void find_and_execute_command(info_t *info)
 {
-char *path = getenv("PATH");
-char *full_path = find_path(info, path, info->tokens[0]);
+    char *path = getenv("PATH");
+    char *full_path = find_path(info, path, info->tokens[0]);
 
-if (full_path)
-{
-info->path = full_path;
-execute_command(info);
+    if (full_path)
+    {
+        info->path = full_path;
+        execute_command(info);
+        free(full_path);
+        info->path = NULL;
+    }
+    else
+    {
+        fprintf(stderr, "Command not found: %s\n", info->tokens[0]);
+    }
 }
-else
-{
-fprintf(stderr, "Command not found: %s\n", info->tokens[0]);
-}
-}
+
 
 /**
  * execute_command - Execute the command specified in info.
  * @info: Pointer to the info_t structure.
  */
-void execute_command(info_t *info) {
-pid_t pid = fork();
-if (pid == 0) {
-/* Child process */
-if (execve(info->path, info->tokens, environ) == -1) {
-perror("execve");
-exit(EXIT_FAILURE);
+void execute_command(info_t *info)
+{
+    pid_t pid = fork();
+    if (pid == 0)
+    {
+        /* Child process */
+        if (execve(info->path, info->tokens, environ) == -1)
+        {
+            perror("execve");
+            exit(EXIT_FAILURE);
+        }
+    }
+    else if (pid < 0)
+    {
+        /* Error forking */
+        perror("fork");
+    }
+    else
+    {
+        /* Parent process */
+        waitpid(pid, &(info->status), 0);
+    }
 }
-} else if (pid < 0) {
-/* Error forking */
-perror("fork");
-} else {
-/* Parent process */
-waitpid(pid, &(info->status), 0);
-}
-}
-
 
 /**
  * find_path - Find the full path of the command.
@@ -49,54 +58,72 @@ waitpid(pid, &(info->status), 0);
  * @command: The command to find.
  * Return: The full path of the command or NULL if not found.
  */
-char *find_path(info_t *info, char *path, char *command) {
-struct stat st;
-char *token;
-char *full_path;
-char copied_path[PATH_MAX + 1];
+char *find_path(info_t *info, char *path, char *command)
+{
+    struct stat st;
+    char *fullpath = NULL;
+    unsigned int com_length, pa_length, orig_pa_length;
+    char *path_copy, *token;
 
-/* Mark info parameter as unused */
-(void)info;
+    (void)info;
 
-/* Check if the command is an absolute path or starts with './' */
-if (command[0] == '/' || (command[0] == '.' && command[1] == '/')) {
-if (stat(command, &st) == 0 && (st.st_mode & S_IXUSR)) {
-/* Command is an absolute path and executable */
-return strdup(command);
-}
-}
+    /* Check if the command is an absolute path or starts with './' */
+    if (command[0] == '/' || (command[0] == '.' && command[1] == '/'))
+    {
+        if (stat(command, &st) == 0 && (st.st_mode & S_IXUSR))
+        {
+            /* Command is an absolute path and executable */
+            return strdup(command);
+        }
+    }
 
-/* Check if PATH environment variable is set */
-if (!path) {
-perror("Error: PATH environment variable not set");
-return NULL;
-}
+    com_length = strlen(command);
+    orig_pa_length = strlen(path);
 
-/* Copy the PATH to avoid modifying the original environment variable */
-strcpy(copied_path, path);
+    /* Allocate memory for a copy of the PATH variable */
+    path_copy = malloc(sizeof(char) * orig_pa_length + 1);
+    if (path_copy == NULL)
+    {
+        perror("malloc");
+        return (NULL);
+    }
 
-/* Iterate through each path in the PATH variable */
-token = strtok(copied_path, ":");
-while (token != NULL) {
-full_path = malloc(_strlen(token) + _strlen(command) + 2);
-if (!full_path) {
-perror("malloc");
-return NULL;
-}
+    /* Copy PATH variable to path_copy */
+    strcpy(path_copy, path);
 
-/* Construct the full path */
-sprintf(full_path, "%s/%s", token, command);
+    token = strtok(path_copy, ":");
+    
+    /* Iterate through directories in the PATH variable */
+    while (token != NULL)
+    {
+        pa_length = strlen(token);
+        /* Allocate memory for the full path of the command */
+        fullpath = malloc(sizeof(char) * (pa_length + com_length) + 2);
+        if (fullpath == NULL)
+        {
+            perror("malloc");
+            free(path_copy);
+            return (NULL);
+        }
 
-/* Check if the command exists at this path */
-if (stat(full_path, &st) == 0) {
-return full_path;
-}
+        /* Construct full path by concatenating directory */
+        strcpy(fullpath, token);
+        fullpath[pa_length] = '/';
+        strcpy(fullpath + pa_length + 1, command);
+        fullpath[pa_length + com_length + 1] = '\0';
 
-/* Clean up and move to the next token */
-free(full_path);
-token = strtok(NULL, ":");
-}
+        /* Validate if fullpath executable (has execute permissions) */
+        if (access(fullpath, X_OK) == 0)
+        {
+            break;
+        }
 
-perror("Command not found in PATH");
-return NULL;
+        /* Clean up */
+        free(fullpath);
+        fullpath = NULL;
+        token = strtok(NULL, ":");
+    }
+
+    free(path_copy);
+    return fullpath;
 }
