@@ -100,6 +100,8 @@ void free_info(info_t *info, int full_cleanup);
 operator_command_struct *parse_operators(char *input);
 void free_operator_commands(operator_command_struct *commands);
 
+void handle_sigint(int sig);
+
 typedef struct builtin
 {
 	char *type;
