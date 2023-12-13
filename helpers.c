@@ -14,51 +14,51 @@ free(temp);
 
 void free_info(info_t *info, int full)
 {
-size_t i;
+    size_t i;
 
-for (i = 0; i < info->token_count; i++)
-{
-free(info->tokens[i]);
-info->tokens[i] = NULL;
-}
-free(info->tokens);
-info->tokens = NULL;
+    for (i = 0; i < info->token_count; i++)
+    {
+        free(info->tokens[i]);
+        info->tokens[i] = NULL;  // Set the pointer to NULL after freeing
+    }
+    free(info->tokens);
+    info->tokens = NULL;
 
-if (info->path)
-{
-free(info->path);
-info->path = NULL;
-}
+    if (info->path)
+    {
+        free(info->path);
+        info->path = NULL;
+    }
 
-if (info->env)
-{
-free_list(&(info->env));
-info->env = NULL;
-}
-if (info->history)
-{
-free_list(&(info->history));
-info->history = NULL;
-}
-if (info->alias)
-{
-free_list(&(info->alias));
-info->alias = NULL;
-}
+    if (info->env)
+    {
+        free_list(&(info->env));
+        info->env = NULL;
+    }
+    if (info->history)
+    {
+        free_list(&(info->history));
+        info->history = NULL;
+    }
+    if (info->alias)
+    {
+        free_list(&(info->alias));
+        info->alias = NULL;
+    }
 
-if (full)
-{
-if (info->cmd_buf)
-{
-free(info->cmd_buf);
-info->cmd_buf = NULL;
-}
-if (info->error_message)
-{
-free(info->error_message);
-info->error_message = NULL;
-}
-}
+    if (full)
+    {
+        if (info->cmd_buf)
+        {
+            free(info->cmd_buf);
+            info->cmd_buf = NULL;
+        }
+        if (info->error_message)
+        {
+            free(info->error_message);
+            info->error_message = NULL;
+        }
+    }
 }
 
 char *strdup(const char *s)

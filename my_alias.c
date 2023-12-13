@@ -12,8 +12,22 @@ alias_t *new_alias(char *name, char *value) {
         perror("malloc");
         exit(EXIT_FAILURE);
     }
+
     new->name = strdup(name);
+    if (!new->name) {
+        perror("strdup");
+        free(new);
+        exit(EXIT_FAILURE);
+    }
+
     new->value = strdup(value);
+    if (!new->value) {
+        perror("strdup");
+        free(new->name);
+        free(new);
+        exit(EXIT_FAILURE);
+    }
+
     new->next = NULL;
     return new;
 }
@@ -25,16 +39,21 @@ alias_t *new_alias(char *name, char *value) {
  * @name: The name of the alias.
  * @value: The value of the alias.
  */
-void add_alias(info_t *info, char *name, char *value) 
-{
+void add_alias(info_t *info, char *name, char *value) {
     alias_t *new, *current;
     new = new_alias(name, value);
     current = info->alias_head;
 
     while (current) {
-        if (strcmp(current->name, name) == 0) {
+        if (current->name && strcmp(current->name, name) == 0) {
             free(current->value);
             current->value = strdup(value);
+            if (!current->value) {
+                perror("strdup");
+                free(new->name);
+                free(new);
+                exit(EXIT_FAILURE);
+            }
             free(new);
             return;
         }
@@ -50,10 +69,12 @@ void add_alias(info_t *info, char *name, char *value)
  * @info: Pointer to the info_t structure.
  */
 void print_aliases(info_t *info) {
-alias_t *current = info->alias_head;
+    alias_t *current = info->alias_head;
 
     while (current) {
-        printf("%s='%s'\n", current->name, current->value);
+        if (current->name && current->value) {
+            printf("%s='%s'\n", current->name, current->value);
+        }
         current = current->next;
     }
 }
@@ -66,24 +87,19 @@ alias_t *current = info->alias_head;
  * @info: Pointer to the info_t structure.
  * Return: Always returns 0.
  */
-int _myalias(info_t *info) 
-{
-    if (info->token_count == 1) 
-    {
+int _myalias(info_t *info) {
+    if (info->token_count == 1) {
         print_aliases(info);
-    } 
-    else 
-    {
-size_t i;
-for (i = 1; i < info->token_count; i++)
-{
+    } else {
+        size_t i;
+        for (i = 1; i < info->token_count; i++) {
             char *name = strtok(info->tokens[i], "=");
             char *value = strtok(NULL, "=");
 
             if (value == NULL) {
                 alias_t *current = info->alias_head;
                 while (current) {
-                    if (strcmp(current->name, name) == 0) {
+                    if (current->name && strcmp(current->name, name) == 0) {
                         printf("%s='%s'\n", current->name, current->value);
                         break;
                     }

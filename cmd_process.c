@@ -48,15 +48,16 @@ info->token_count = token_count;
  */
 void free_info_tokens(info_t *info)
 {
-size_t i;
+    size_t i;
 
-for (i = 0; i < info->token_count; i++)
-{
-free(info->tokens[i]);
-}
-free(info->tokens);
-info->tokens = NULL;
-info->token_count = 0;
+    for (i = 0; i < info->token_count; i++)
+    {
+        free(info->tokens[i]);
+        info->tokens[i] = NULL; 
+    }
+    free(info->tokens);
+    info->tokens = NULL;
+    info->token_count = 0;
 }
 
 /**
