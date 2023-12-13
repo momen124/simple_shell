@@ -14,7 +14,7 @@ free(temp);
 
 void free_info(info_t *info, int full)
 {
-    size_t i;
+size_t i;
 
 if (info->tokens)
 {
@@ -30,11 +30,11 @@ free(info->tokens);
 info->tokens = NULL;
 }
 
-    if (info->path)
-    {
-        free(info->path);
-        info->path = NULL;
-    }
+if (info->path)
+{
+free(info->path);
+info->path = NULL;
+}
 
 if (info->env)
 {
@@ -73,10 +73,11 @@ info->error_message = NULL;
 char *strdup(const char *s)
 {
 size_t size = strlen(s) + 1;
-char *new_str = strdup(s);
-if (!new_str) {
-    perror("strdup");
-    return NULL;
+char *new_str = malloc(size);
+if (!new_str)
+{
+perror("malloc");
+return (NULL);
 }
 memcpy(new_str, s, size);
 return (new_str);
