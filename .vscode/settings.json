@@ -1,6 +1,8 @@
 {
     "C_Cpp.errorSquiggles": "disabled",
     "files.associations": {
-        "fcntl.h": "c"
+        "fcntl.h": "c",
+        "shell.h": "c",
+        "signal.h": "c"
     }
 }

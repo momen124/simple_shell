@@ -47,7 +47,12 @@ if (i > 0 && commands->operators[i - 1] != NULL &&
 continue;
 }
 
-tokenize_command(&info, commands->command_list[i]);
+info.tokens = tokenize_command(commands->command_list[i]);
+info.token_count = 0;
+while (info.tokens[info.token_count] != NULL) {
+info.token_count++;
+}
+
 if (info.token_count > 0) {
 builtin_ret = find_builtin(&info);
 if (builtin_ret != 0) {
@@ -56,7 +61,8 @@ find_and_execute_command(&info);
 }
 
 last_command_status = info.status;
-free_info(&info, 0);
+
+free(info.tokens);
 }
 
 free_operator_commands(commands);
@@ -71,7 +77,7 @@ return info.status;
  * display_prompt - Display the shell prompt.
  */
 void display_prompt(void) {
-printf("$ ");
+printf("# ");
 }
 
 /**
@@ -88,7 +94,9 @@ size_t bufSize = 0;
 lineSize = getline(&buffer, &bufSize, stdin);
 
 if (lineSize == -1) {
-free(buffer);  /* Free buffer if getline fails */
+/* Free buffer if getline fails or EOF is reached */
+free(buffer);  
+buffer = NULL;  /* Reset static buffer to NULL */
 return NULL;
 }
 
@@ -100,12 +108,13 @@ buffer[lineSize - 1] = '\0';
 command = strdup(buffer);
 if (!command) {
 perror("strdup");
-free(buffer);  /* Free buffer if strdup fails */
+/* No need to free buffer here, it will be reused or freed on next call */
 return NULL;
 }
 
-/* Clean up buffer only if the whole line is processed */
-if (strchr(buffer, ';') == NULL || strchr(buffer, ';') == buffer + strlen(buffer) - 1) {
+/* Optional: Clean up buffer based on specific conditions */
+/* Note: Be cautious with this as it affects subsequent calls to this function */
+if (_strchr(buffer, ';') == NULL || _strchr(buffer, ';') == buffer + _strlen(buffer) - 1) {
 free(buffer);
 buffer = NULL;
 }

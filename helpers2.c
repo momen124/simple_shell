@@ -66,7 +66,7 @@ return NULL;
 }
 result->command_list[result->count++] = new_command;
 } else {
-size_t new_size = strlen(result->command_list[cmd_index]) + strlen(token) + 2;
+size_t new_size = _strlen(result->command_list[cmd_index]) + _strlen(token) + 2;
 new_command = malloc(new_size);
 if (!new_command) {
 perror("malloc");

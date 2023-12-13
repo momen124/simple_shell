@@ -1,5 +1,4 @@
 #include "shell.h"
-char *find_path(info_t *info, char *path, char *command);
 
 /**
  * find_and_execute_command - Find and execute the command specified in info.
@@ -25,24 +24,23 @@ fprintf(stderr, "Command not found: %s\n", info->tokens[0]);
  * execute_command - Execute the command specified in info.
  * @info: Pointer to the info_t structure.
  */
-void execute_command(info_t *info)
-{
+void execute_command(info_t *info) {
 pid_t pid = fork();
 if (pid == 0) {
 /* Child process */
-signal(SIGINT, SIG_DFL);
-signal(SIGTSTP, SIG_DFL);
-
 if (execve(info->path, info->tokens, environ) == -1) {
 perror("execve");
 exit(EXIT_FAILURE);
 }
 } else if (pid < 0) {
+/* Error forking */
 perror("fork");
 } else {
+/* Parent process */
 waitpid(pid, &(info->status), 0);
 }
 }
+
 
 /**
  * find_path - Find the full path of the command.
@@ -80,7 +78,7 @@ strcpy(copied_path, path);
 /* Iterate through each path in the PATH variable */
 token = strtok(copied_path, ":");
 while (token != NULL) {
-full_path = malloc(strlen(token) + strlen(command) + 2);
+full_path = malloc(_strlen(token) + _strlen(command) + 2);
 if (!full_path) {
 perror("malloc");
 return NULL;

@@ -18,6 +18,7 @@
 #define READ_BUF_SIZE 1024
 #define WRITE_BUF_SIZE 1024
 #define BUF_FLUSH -1
+#define BUFFER 1024
 
 /* for command chaining */
 #define CMD_NORM 0
@@ -91,7 +92,6 @@ size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n);
 /* Function prototypes */
 void display_prompt(void);
 char *read_user_input();
-void tokenize_command(info_t *info, char *input);
 int find_builtin(info_t *info);
 void find_and_execute_command(info_t *info);
 void execute_command(info_t *info);
@@ -199,7 +199,7 @@ void find_and_execute_command(info_t *info);
 void execute_command(info_t *info);
 
 /* Command processing */
-void tokenize_command(info_t *info, char *input); 
+char **tokenize_command(char *str); 
 int find_builtin(info_t *info); 
 
 /* Error handling*/
@@ -269,7 +269,7 @@ int replace_vars(info_t *);
 int replace_string(char **, char *);
 
 void free_info(info_t *info, int full_cleanup);
-void tokenize_command(info_t *info, char *input);
+char **tokenize_command(char *str);
 void execute_command(info_t *info);
 void display_error(info_t *info);
 

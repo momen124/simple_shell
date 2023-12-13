@@ -114,7 +114,7 @@ else
 {
 sprintf(buffer, "%d", getpid());
 }
-replace_len = strlen(buffer);
+replace_len = _strlen(buffer);
 memmove(input + i, buffer, replace_len);
 memset(input + i + replace_len, '\0', strlen(input) - i - replace_len);
 i += replace_len - 1;
@@ -132,9 +132,9 @@ var_name[j - i - 1] = '\0';
 var_value = getenv(var_name);
 if (var_value != NULL)
 {
-replace_len = strlen(var_value);
+replace_len = _strlen(var_value);
 memmove(input + i, var_value, replace_len);
-memset(input + i + replace_len, '\0', strlen(input) - i - replace_len);
+memset(input + i + replace_len, '\0', _strlen(input) - i - replace_len);
 i += replace_len - 1;
 }
 }

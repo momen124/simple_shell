@@ -5,43 +5,25 @@
  * @info: Pointer to the info_t structure.
  * @input: Input command string.
  */
-void tokenize_command(info_t *info, char *input)
-{
-size_t i;
+char **tokenize_command(char *str) {
+char **tokens;
 char *token;
-char **tokens = malloc(READ_BUF_SIZE * sizeof(char *));
-size_t token_count = 0;
-
-if (!tokens)
-{
+unsigned int i;
+tokens = malloc(sizeof(char *) * BUFFER);
+if (tokens == NULL) {
 perror("malloc");
 exit(EXIT_FAILURE);
 }
-
-token = strtok(input, " \t\r\n\a");
-while (token != NULL)
-{
-tokens[token_count] = strdup(token);
-if (!tokens[token_count])
-{
-perror("strdup");
-for (i = 0; i < token_count; i++)
-{
-free(tokens[i]);
+token = strtok(str, "\n\t\r ");
+i = 0;
+while (token != NULL) {
+tokens[i] = token;
+token = strtok(NULL, "\n\t\r ");
+i++;
+}
 tokens[i] = NULL;
+return tokens;
 }
-free(tokens);
-exit(EXIT_FAILURE);
-}
-token_count++;
-token = strtok(NULL, " \t\r\n\a");
-}
-tokens[token_count] = NULL;
-
-info->tokens = tokens;
-info->token_count = token_count;
-}
-
 /**
  * free_info_tokens - Free memory allocated for tokens in info.
  * @info: Pointer to the info_t structure.
