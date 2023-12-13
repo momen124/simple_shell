@@ -70,18 +70,23 @@ info->error_message = NULL;
 }
 }
 
-char *strdup(const char *s)
+char *_strdup(const char *s)
 {
-size_t size = strlen(s) + 1;
-char *new_str = malloc(size);
-if (!new_str)
-{
-perror("malloc");
+int len = 0;
+char *ret;
+
+if (s == NULL)
 return (NULL);
+while (*s++)
+len++;
+ret = malloc(sizeof(char) * (len + 1));
+if (!ret)
+return (NULL);
+for (len++; len--;)
+ret[len] = *--s;
+return (ret);
 }
-memcpy(new_str, s, size);
-return (new_str);
-}
+
 
 void preprocess_command(info_t *info, char *input)
 {
