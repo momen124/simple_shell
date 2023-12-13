@@ -16,13 +16,19 @@ void free_info(info_t *info, int full)
 {
     size_t i;
 
-    for (i = 0; i < info->token_count; i++)
-    {
-        free(info->tokens[i]);
-        info->tokens[i] = NULL;  // Set the pointer to NULL after freeing
-    }
-    free(info->tokens);
-    info->tokens = NULL;
+if (info->tokens)
+{
+for (i = 0; i < info->token_count; i++)
+{
+if (info->tokens[i])
+{
+free(info->tokens[i]);
+info->tokens[i] = NULL;
+}
+}
+free(info->tokens);
+info->tokens = NULL;
+}
 
     if (info->path)
     {
@@ -30,45 +36,47 @@ void free_info(info_t *info, int full)
         info->path = NULL;
     }
 
-    if (info->env)
-    {
-        free_list(&(info->env));
-        info->env = NULL;
-    }
-    if (info->history)
-    {
-        free_list(&(info->history));
-        info->history = NULL;
-    }
-    if (info->alias)
-    {
-        free_list(&(info->alias));
-        info->alias = NULL;
-    }
+if (info->env)
+{
+free_list(&(info->env));
+info->env = NULL;
+}
 
-    if (full)
-    {
-        if (info->cmd_buf)
-        {
-            free(info->cmd_buf);
-            info->cmd_buf = NULL;
-        }
-        if (info->error_message)
-        {
-            free(info->error_message);
-            info->error_message = NULL;
-        }
-    }
+if (info->history)
+{
+free_list(&(info->history));
+info->history = NULL;
+}
+
+if (info->alias)
+{
+free_list(&(info->alias));
+info->alias = NULL;
+}
+
+if (full)
+{
+if (info->cmd_buf)
+{
+free(info->cmd_buf);
+info->cmd_buf = NULL;
+}
+
+if (info->error_message)
+{
+free(info->error_message);
+info->error_message = NULL;
+}
+}
 }
 
 char *strdup(const char *s)
 {
 size_t size = strlen(s) + 1;
-char *new_str = malloc(size);
-if (!new_str)
-{
-perror("malloc");
-return (NULL);
+char *new_str = strdup(s);
+if (!new_str) {
+    perror("strdup");
+    return NULL;
 }
 memcpy(new_str, s, size);
 return (new_str);

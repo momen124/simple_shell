@@ -73,26 +73,28 @@ operator_command_struct *parse_operators(char *input)
 
 void free_operator_commands(operator_command_struct *commands)
 {
-	int i;
+    int i;
 
-	if (!commands)
-		return;
+    if (!commands)
+        return;
 
-	for (i = 0; i < commands->count; i++)
-	{
-		if (commands->command_list[i])
-		{
-			free(commands->command_list[i]);
-		}
-	}
-	for (i = 0; i < commands->count - 1; i++)
-	{
-		if (commands->operators[i])
-		{
-			free(commands->operators[i]);
-		}
-	}
-	free(commands->command_list);
-	free(commands->operators);
-	free(commands);
+    for (i = 0; i < commands->count; i++)
+    {
+        if (commands->command_list[i])
+        {
+            free(commands->command_list[i]);
+        }
+    }
+
+    for (i = 0; i < commands->count - 1; i++)
+    {
+        if (commands->operators[i])
+        {
+            free(commands->operators[i]);
+        }
+    }
+
+    free(commands->command_list);
+    free(commands->operators);
+    free(commands);
 }

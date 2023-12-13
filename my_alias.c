@@ -44,21 +44,21 @@ void add_alias(info_t *info, char *name, char *value) {
     new = new_alias(name, value);
     current = info->alias_head;
 
-    while (current) {
-        if (current->name && strcmp(current->name, name) == 0) {
-            free(current->value);
-            current->value = strdup(value);
-            if (!current->value) {
-                perror("strdup");
-                free(new->name);
-                free(new);
-                exit(EXIT_FAILURE);
-            }
+while (current) {
+    if (current->name && strcmp(current->name, name) == 0) {
+        free(current->value);  // Free the old value
+        current->value = strdup(value);
+        if (!current->value) {
+            perror("strdup");
+            free(new->name);
             free(new);
-            return;
+            exit(EXIT_FAILURE);
         }
-        current = current->next;
+        free(new);
+        return;
     }
+    current = current->next;
+}
 
     new->next = info->alias_head;
     info->alias_head = new;

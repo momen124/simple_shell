@@ -5,11 +5,9 @@
  * Return: Exit status.
  */
 int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     info_t info = {0};
     char *user_input;
-    int builtin_ret;
-    int last_command_status = 0;
-    int i;
     operator_command_struct *commands;
 
     if (argc > 1) {
@@ -22,8 +20,14 @@ int main(int argc, char *argv[]) {
         }
 
         user_input = read_user_input();
-        if (user_input == NULL || user_input[0] == '\0') {
-            free(user_input);  
+
+        if (checkForEOF(user_input)) {
+            free(user_input);
+            continue;
+        }
+
+        if (user_input[0] == '\0') {
+            free(user_input);
             break;
         }
 
@@ -33,30 +37,25 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        for (i = 0; i < commands->count; i++) {
-            if (i > 0 && commands->operators[i - 1] != NULL &&
-                ((strcmp(commands->operators[i - 1], "&&") == 0 && last_command_status != 0) ||
-                (strcmp(commands->operators[i - 1], "||") == 0 && last_command_status == 0))) {
-                continue;
-            }
-
+        for (int i = 0; i < commands->count; i++) {
             tokenize_command(&info, commands->command_list[i]);
             if (info.token_count > 0) {
-                builtin_ret = find_builtin(&info);
+                int builtin_ret = find_builtin(&info);
                 if (builtin_ret != 0) {
                     find_and_execute_command(&info);
                 }
             }
 
-            last_command_status = info.status;
-            free_info(&info, 0);
+            free_info_tokens(&info);  
         }
 
         free_operator_commands(commands);
         free(user_input);
     }
 
-    free_info(&info, 1);
+    free_info_tokens(&info);  
+    free_info(&info, 1);      
+
     return info.status;
 }
 

@@ -28,27 +28,21 @@ fprintf(stderr, "Command not found: %s\n", info->tokens[0]);
 void execute_command(info_t *info)
 {
 pid_t pid = fork();
-if (pid == 0)
-{
+if (pid == 0) {
 /* Child process */
-if (execve(info->path, info->tokens, environ) == -1)
-{
+signal(SIGINT, SIG_DFL);
+signal(SIGTSTP, SIG_DFL);
+
+if (execve(info->path, info->tokens, environ) == -1) {
 perror("execve");
 exit(EXIT_FAILURE);
 }
-}
-else if (pid < 0)
-{
-/* Error forking */
+} else if (pid < 0) {
 perror("fork");
-}
-else
-{
-/* Parent process */
+} else {
 waitpid(pid, &(info->status), 0);
 }
 }
-
 /**
  * find_path - Find the full path of the command.
  * @info: Pointer to the info_t structure. (Unused)
@@ -74,24 +68,23 @@ strcpy(copied_path, path);
 token = strtok(copied_path, ":");
 while (token != NULL)
 {
-full_path = malloc(strlen(token) + strlen(command) + 2);
-if (!full_path)
-{
-perror("malloc");
-return (NULL);
-}
+    full_path = malloc(strlen(token) + strlen(command) + 2);
+    if (!full_path)
+    {
+        perror("malloc");
+        return NULL;
+    }
 
-sprintf(full_path, "%s/%s", token, command);
+    sprintf(full_path, "%s/%s", token, command);
 
-if (stat(full_path, &st) == 0)
-{
-return (full_path);
-}
+    if (stat(full_path, &st) == 0)
+    {
+        return full_path;
+    }
 
-free(full_path);
-token = strtok(NULL, ":");
+    free(full_path);
+    token = strtok(NULL, ":");
 }
 
 perror("Command not found in PATH");
-return (NULL);
-}
+return NULL;
