@@ -12,62 +12,60 @@ free(temp);
 }
 }
 
-void free_info(info_t *info, int full)
-{
-size_t i;
+void free_info(info_t *info, int full) {
+    size_t i;
 
-if (info->tokens)
-{
-for (i = 0; i < info->token_count; i++)
-{
-if (info->tokens[i])
-{
-free(info->tokens[i]);
-info->tokens[i] = NULL;
-}
-}
-free(info->tokens);
-info->tokens = NULL;
-}
+    /* Free tokens */
+    if (info->tokens) {
+        for (i = 0; i < info->token_count; i++) {
+            if (info->tokens[i]) {
+                free(info->tokens[i]);
+                info->tokens[i] = NULL; /* Nullify pointer after freeing */
+            }
+        }
+        free(info->tokens);
+        info->tokens = NULL; /* Nullify pointer after freeing */
+    }
 
-if (info->path)
-{
-free(info->path);
-info->path = NULL;
-}
+    /* Free path */
+    if (info->path) {
+        free(info->path);
+        info->path = NULL; /* Nullify pointer after freeing */
+    }
 
-if (info->env)
-{
-free_list(&(info->env));
-info->env = NULL;
-}
+    /* Free environment list */
+    /* Assuming free_list is a function that frees a linked list */
+    if (info->env) {
+        free_list(&(info->env));
+        info->env = NULL; /* Nullify pointer after freeing */
+    }
 
-if (info->history)
-{
-free_list(&(info->history));
-info->history = NULL;
-}
+    /* Free history list */
+    if (info->history) {
+        free_list(&(info->history));
+        info->history = NULL; /* Nullify pointer after freeing */
+    }
 
-if (info->alias)
-{
-free_list(&(info->alias));
-info->alias = NULL;
-}
+    /* Free alias list */
+    if (info->alias) {
+        free_list(&(info->alias));
+        info->alias = NULL; /* Nullify pointer after freeing */
+    }
 
-if (full)
-{
-if (info->cmd_buf)
-{
-free(info->cmd_buf);
-info->cmd_buf = NULL;
-}
+    /* The full flag indicates whether to free all fields of info */
+    if (full) {
+        /* Free command buffer */
+        if (info->cmd_buf) {
+            free(info->cmd_buf);
+            info->cmd_buf = NULL; /* Nullify pointer after freeing */
+        }
 
-if (info->error_message)
-{
-free(info->error_message);
-info->error_message = NULL;
-}
-}
+        /* Free error message */
+        if (info->error_message) {
+            free(info->error_message);
+            info->error_message = NULL; /* Nullify pointer after freeing */
+        }
+    }
 }
 
 char *_strdup(const char *s)

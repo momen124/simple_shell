@@ -33,6 +33,10 @@ int main(int argc, char *argv[])
         /* Handle EOF (Ctrl+D) and errors from read_user_input */
         if (user_input == NULL)
         {
+            if (isatty(STDIN_FILENO))
+            {
+                printf("\n");
+            }
             break; /* Exit the loop and therefore the shell */
         }
 
@@ -79,6 +83,7 @@ int main(int argc, char *argv[])
             free(info.tokens);
         }
 
+        /* Free resources */
         free_operator_commands(commands);
         free(user_input);
     }
@@ -86,6 +91,7 @@ int main(int argc, char *argv[])
     free_info(&info, 1);
     return info.status;
 }
+
 /**
  * display_prompt - Display the shell prompt.
  */
