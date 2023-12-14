@@ -6,20 +6,20 @@
  */
 void find_and_execute_command(info_t *info)
 {
-    char *path = getenv("PATH");
-    char *full_path = find_path(info, path, info->tokens[0]);
+	char *path = getenv("PATH");
+	char *full_path = find_path(info, path, info->tokens[0]);
 
-    if (full_path)
-    {
-        info->path = full_path;
-        execute_command(info);
-        free(full_path);
-        info->path = NULL;
-    }
-    else
-    {
-        fprintf(stderr, "Command not found: %s\n", info->tokens[0]);
-    }
+	if (full_path)
+	{
+		info->path = full_path;
+		execute_command(info);
+		free(full_path);
+		info->path = NULL;
+	}
+	else
+	{
+		fprintf(stderr, "Command not found: %s\n", info->tokens[0]);
+	}
 }
 
 
@@ -29,26 +29,27 @@ void find_and_execute_command(info_t *info)
  */
 void execute_command(info_t *info)
 {
-    pid_t pid = fork();
-    if (pid == 0)
-    {
-        /* Child process */
-        if (execve(info->path, info->tokens, environ) == -1)
-        {
-            perror("execve");
-            exit(EXIT_FAILURE);
-        }
-    }
-    else if (pid < 0)
-    {
-        /* Error forking */
-        perror("fork");
-    }
-    else
-    {
-        /* Parent process */
-        waitpid(pid, &(info->status), 0);
-    }
+	pid_t pid = fork();
+	if (pid == 0)
+
+	{
+		/* Child process */
+		if (execve(info->path, info->tokens, environ) == -1)
+		{
+			perror("execve");
+			exit(EXIT_FAILURE);
+		}
+	}
+	else if (pid < 0)
+	{
+		/* Error forking */
+		perror("fork");
+	}
+	else
+	{
+		/* Parent process */
+		waitpid(pid, &(info->status), 0);
+	}
 }
 
 /**
@@ -60,70 +61,70 @@ void execute_command(info_t *info)
  */
 char *find_path(info_t *info, char *path, char *command)
 {
-    struct stat st;
-    char *fullpath = NULL;
-    unsigned int com_length, pa_length, orig_pa_length;
-    char *path_copy, *token;
+	struct stat st;
+	char *fullpath = NULL;
+	unsigned int com_length, pa_length, orig_pa_length;
+	char *path_copy, *token;
 
-    (void)info;
+	(void)info;
 
-    /* Check if the command is an absolute path or starts with './' */
-    if (command[0] == '/' || (command[0] == '.' && command[1] == '/'))
-    {
-        if (stat(command, &st) == 0 && (st.st_mode & S_IXUSR))
-        {
-            /* Command is an absolute path and executable */
-            return strdup(command);
-        }
-    }
+	/* Check if the command is an absolute path or starts with './' */
+	if (command[0] == '/' || (command[0] == '.' && command[1] == '/'))
+	{
+		if (stat(command, &st) == 0 && (st.st_mode & S_IXUSR))
+		{
+			/* Command is an absolute path and executable */
+			return (strdup(command));
+		}
+	}
 
-    com_length = strlen(command);
-    orig_pa_length = strlen(path);
+	com_length = strlen(command);
+	orig_pa_length = strlen(path);
 
-    /* Allocate memory for a copy of the PATH variable */
-    path_copy = malloc(sizeof(char) * orig_pa_length + 1);
-    if (path_copy == NULL)
-    {
-        perror("malloc");
-        return (NULL);
-    }
+	/* Allocate memory for a copy of the PATH variable */
+	path_copy = malloc(sizeof(char) * orig_pa_length + 1);
+	if (path_copy == NULL)
+	{
+		perror("malloc");
+		return (NULL);
+	}
 
-    /* Copy PATH variable to path_copy */
-    strcpy(path_copy, path);
+	/* Copy PATH variable to path_copy */
+	strcpy(path_copy, path);
 
-    token = strtok(path_copy, ":");
-    
-    /* Iterate through directories in the PATH variable */
-    while (token != NULL)
-    {
-        pa_length = strlen(token);
-        /* Allocate memory for the full path of the command */
-        fullpath = malloc(sizeof(char) * (pa_length + com_length) + 2);
-        if (fullpath == NULL)
-        {
-            perror("malloc");
-            free(path_copy);
-            return (NULL);
-        }
+	token = strtok(path_copy, ":");
 
-        /* Construct full path by concatenating directory */
-        strcpy(fullpath, token);
-        fullpath[pa_length] = '/';
-        strcpy(fullpath + pa_length + 1, command);
-        fullpath[pa_length + com_length + 1] = '\0';
+	/* Iterate through directories in the PATH variable */
+	while (token != NULL)
+	{
+		pa_length = strlen(token);
+		/* Allocate memory for the full path of the command */
+		fullpath = malloc(sizeof(char) * (pa_length + com_length) + 2);
+		if (fullpath == NULL)
+		{
+			perror("malloc");
+			free(path_copy);
+			return (NULL);
+		}
 
-        /* Validate if fullpath executable (has execute permissions) */
-        if (access(fullpath, X_OK) == 0)
-        {
-            break;
-        }
+		/* Construct full path by concatenating directory */
+		strcpy(fullpath, token);
+		fullpath[pa_length] = '/';
+		strcpy(fullpath + pa_length + 1, command);
+		fullpath[pa_length + com_length + 1] = '\0';
 
-        /* Clean up */
-        free(fullpath);
-        fullpath = NULL;
-        token = strtok(NULL, ":");
-    }
+		/* Validate if fullpath executable (has execute permissions) */
+		if (access(fullpath, X_OK) == 0)
+		{
+			break;
+		}
 
-    free(path_copy);
-    return fullpath;
+		/* Clean up */
+		free(fullpath);
+		fullpath = NULL;
+		token = strtok(NULL, ":");
+	}
+
+	free(path_copy);
+	return (fullpath);
 }

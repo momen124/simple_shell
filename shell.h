@@ -42,17 +42,18 @@ extern void info_init(void);
 
 extern char **environ;
 
-typedef struct alias {
-    char *name;
-    char *value;
-    struct alias *next;
+typedef struct alias
+{
+	char *name;
+	char *value;
+	struct alias *next;
 } alias_t;
 
-typedef struct liststr 
+typedef struct liststr
 {
-int num;
-char *str;
-struct liststr *next;
+	int num;
+	char *str;
+	struct liststr *next;
 } list_t;
 
 typedef struct info
@@ -81,10 +82,11 @@ typedef struct info
 	char *error_message;
 } info_t;
 
-typedef struct operator_command_struct {
-    char **command_list;
-    char **operators;
-    int count;
+typedef struct operator_command_struct
+{
+	char **command_list;
+	char **operators;
+	int count;
 } operator_command_struct;
 
 size_t _getline(info_t *info __attribute__((unused)), char **line, size_t *n);
@@ -190,25 +192,25 @@ void remove_comments(char *);
 int _myexit(info_t *info);
 int _myenv(info_t *info);
 int _myhelp(info_t *info);
-int _myhistory(info_t *info); 
+int _myhistory(info_t *info);
 int _mysetenv(info_t *info);
 int _myunsetenv(info_t *info);
 int _mycd(info_t *info);
 int _myalias(info_t *info);
 
 /* Command execution */
-void find_and_execute_command(info_t *info); 
+void find_and_execute_command(info_t *info);
 void execute_command(info_t *info);
 
 /* Command processing */
-char **tokenize_command(char *str); 
-int find_builtin(info_t *info); 
+char **tokenize_command(char *str);
+int find_builtin(info_t *info);
 
 /* Error handling*/
-void report_error(const char *error_message); 
+void report_error(const char *error_message);
 /* Helpers*/
 void free_info(info_t *info, int full);
-char *strdup(const char *s); 
+char *strdup(const char *s);
 
 /* toem_builtin.c */
 int _myexit(info_t *);

@@ -7,8 +7,8 @@
  */
 int _myexit(info_t *info)
 {
-(void)info;
-exit(0);
+	(void)info;
+	exit(0);
 }
 
 /**
@@ -18,15 +18,15 @@ exit(0);
  */
 int _myenv(info_t *info)
 {
-int i;
+	int i;
 
-(void)info;
+	(void)info;
 
-for (i = 0; environ[i] != NULL; i++)
-{
-printf("%s\n", environ[i]);
-}
-return (0);
+	for (i = 0; environ[i] != NULL; i++)
+	{
+		printf("%s\n", environ[i]);
+	}
+	return (0);
 }
 
 /**
@@ -36,11 +36,11 @@ return (0);
  */
 int _myhelp(info_t *info)
 {
-(void)info;
-printf("Shell Help:\n");
-printf("Available commands:\n");
-printf("exit, env, help, history, setenv, unsetenv, cd, alias\n");
-return (0);
+	(void)info;
+	printf("Shell Help:\n");
+	printf("Available commands:\n");
+	printf("exit, env, help, history, setenv, unsetenv, cd, alias\n");
+	return (0);
 }
 
 /**
@@ -50,14 +50,14 @@ return (0);
  */
 int _myhistory(info_t *info)
 {
-int i;
+	int i;
 
-(void)info;
+	(void)info;
 
-for (i = 0; i < 10 && info->cmd_buf[i] != NULL; i++)
-{
-printf("%s\n", info->cmd_buf[i]);
-}
+	for (i = 0; i < 10 && info->cmd_buf[i] != NULL; i++)
+	{
+		printf("%s\n", info->cmd_buf[i]);
+	}
 
-return (0);
+	return (0);
 }

@@ -8,8 +8,8 @@
 void _puts(char *s)
 {
 	unsigned int len;
-	
+
 	len = _strlen(s);
-	
+
 	write(STDOUT_FILENO, s, len);
 }

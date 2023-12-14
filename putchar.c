@@ -10,7 +10,7 @@
 int _putchar(char ch)
 {
 	static char buf[WRITE_BUF_SIZE];
-    static int i = 0;
+	static int i = 0;
 
 	if (ch == BUF_FLUSH || i >= WRITE_BUF_SIZE)
 	{
