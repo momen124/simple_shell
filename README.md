@@ -4,7 +4,8 @@
 Shell is a simple UNIX command interpreter written entirely in C that replicates the functionalities of the simple shell (sh). It includes additional functions and built-in commands.
 
 ## Installation
-Clone this repository into your working directory. Compile the files using GCC with the following flags for best results:gcc main.c -Wall -Wextra -Werror -pedantic -std=gnu89 -o main
+Clone this repository into your working directory. Compile the files using GCC with the following flags for best results:
+gcc main.c -Wall -Wextra -Werror -pedantic -std=gnu89 -o main
 
 ## Usage
 After compilation, you can run the resulting program in interactive or non-interactive mode.
